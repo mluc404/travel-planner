@@ -1,37 +1,17 @@
 "use client";
+import { useState } from "react";
+import Autocomplete from "react-google-autocomplete";
 
-import { useState, useEffect } from "react";
-import Script from "next/script";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-
-type PlaceOption = {
-  label: string;
-  value: {
-    description: string;
-    place_id: string;
-    reference: string;
-  };
+type PlaceResult = {
+  place_id: string;
+  name: string;
+  formatted_address: string;
 };
 
 export default function CreateTrip() {
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<PlaceOption | null>(null);
-
-  useEffect(() => {
-    if (window.google && window.google.maps && window.google.maps.places) {
-      setIsScriptLoaded(true);
-    }
-  }, []);
-
-  console.log(selectedPlace);
-
+  const [selectedPlace, setSelectedPlace] = useState<PlaceResult | null>(null);
   return (
     <div className="px-5 mt-8 sm:px-20 md:px-40">
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY}&libraries=places&loading=async`}
-        onLoad={() => setIsScriptLoaded(true)}
-      />
-
       <h1 className="font-bold text-3xl">Trip Information</h1>
       <p className="text-gray-500 text-xl mt-2">
         Enter your trip information and we will generate a customized interary
@@ -39,21 +19,23 @@ export default function CreateTrip() {
       <div className="mt-10">
         <div>
           <h2 className="text-xl font-semibold">Where would you like to go?</h2>
-          {isScriptLoaded && (
-            <GooglePlacesAutocomplete
-              apiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY}
-              selectProps={{
-                value: selectedPlace,
-                onChange: (newValue) => {
-                  setSelectedPlace(newValue);
-                },
-              }}
-            />
-          )}
+          <Autocomplete
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY}
+            onPlaceSelected={(place: PlaceResult) => {
+              console.log(place);
+              setSelectedPlace(place);
+            }}
+            options={{
+              types: ["locality", "country"],
+              fields: ["place_id", "name", "formatted_address"],
+            }}
+            placeholder="Enter a city or country"
+            className="w-[100%] md:w-[80%] border-2 border-gray-500 p-2 rounded font-semibold text-gray-700 mt-2"
+          />
           {selectedPlace && (
-            <p className="mt-2 text-gray-600">
-              Selected: {selectedPlace.label}
-            </p>
+            <div className="mt-2">
+              Selected: <strong>{selectedPlace.name}</strong>
+            </div>
           )}
         </div>
       </div>
