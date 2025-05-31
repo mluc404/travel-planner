@@ -19,7 +19,6 @@ export default function CreateTrip() {
     const fetchPredictions = debounce(async () => {
       const preds = await callAutocomplete(input);
       setPredictions(preds ?? []);
-      console.log(preds);
     }, 300);
     input.length > 2 && isSelecting && fetchPredictions();
   }, [input]);
@@ -29,11 +28,11 @@ export default function CreateTrip() {
     setSelectedPlace(place);
     setPredictions([]);
     setIsSelecting(false);
+    console.log(place);
 
     const placeDetails = await getPlaceDetails(place.place_id);
     if (placeDetails.photos) {
       const photoRef = placeDetails.photos[0].photo_reference;
-      console.log(photoRef);
       const placePhoto = await getPlacePhoto(photoRef);
       setPhotoUrl(placePhoto);
     }
@@ -46,29 +45,29 @@ export default function CreateTrip() {
         Enter your trip information and we will generate a customized interary
       </p>
       <div className="mt-10">
-        <div>
-          <h2 className="text-xl font-semibold">Where would you like to go?</h2>
-
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              setIsSelecting(true);
-            }}
-            placeholder="Enter a city or a country"
-            className="w-full cursor-pointer px-2 py-1 text-[1rem] 
-            font-semibold text-gray-700 border-2 rounded"
-          />
-          <div>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2 relative">
+            <h2 className="text-xl font-semibold">
+              Where would you like to go?
+            </h2>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                setIsSelecting(true);
+              }}
+              placeholder="Enter a city or a country"
+              className="input-primary"
+            />
             {predictions.length > 0 && (
-              <ul className="flex flex-col border-2 rounded">
+              <ul className="absolute top-full left-0 right-0 z-10 flex flex-col border-2 rounded">
                 {predictions.map((place, index) => (
                   <li
                     key={index}
-                    className="cursor-pointer hover:bg-gray-600 hover:text-white 
-                    px-2 py-1 text-[1rem] font-semibold text-gray-700 
-                    border-b-2 border-gray-200 last:border-b-0"
+                    className="cursor-pointer bg-white hover:bg-gray-600 hover:text-white
+                      p-2 text-[1rem] font-semibold text-gray-700
+                      border-b-2 border-gray-200 last:border-b-0"
                     onClick={() => {
                       handleSelect(place);
                     }}
@@ -78,6 +77,15 @@ export default function CreateTrip() {
                 ))}
               </ul>
             )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold">How long is your trip</h2>
+            <input
+              type="text"
+              className="input-primary"
+              placeholder="Enter a number"
+            />
           </div>
           {photoUrl && (
             <div className="relative w-[300px] h-[300px] mt-4">
