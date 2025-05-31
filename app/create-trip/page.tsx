@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { callAutocomplete } from "../api/places/callAutocomplete";
 import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js";
+import debounce from "lodash.debounce";
 
 export default function CreateTrip() {
   const [input, setInput] = useState<string>("");
@@ -11,11 +12,11 @@ export default function CreateTrip() {
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchPredictions = async () => {
+    const fetchPredictions = debounce(async () => {
       const preds = await callAutocomplete(input);
       setPredictions(preds ?? []);
       console.log(preds);
-    };
+    }, 300);
     input.length > 2 && isSelecting && fetchPredictions();
   }, [input]);
 
@@ -25,6 +26,8 @@ export default function CreateTrip() {
     setPredictions([]);
     setIsSelecting(false);
   };
+  // console.log(selectedPlace);
+
   return (
     <div className="px-5 mt-8 sm:px-20 md:px-40">
       <h1 className="font-bold text-3xl">Trip Information</h1>
@@ -62,7 +65,6 @@ export default function CreateTrip() {
               ))}
             </ul>
           )}
-          <div>{selectedPlace?.description}</div>
         </div>
       </div>
     </div>
