@@ -7,9 +7,10 @@ import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js";
 import debounce from "lodash.debounce";
 import Image from "next/image";
 import { Calendar } from "primereact/calendar";
+import { travelParty } from "../constants/options";
 
 export default function CreateTrip() {
-  const [input, setInput] = useState<string>("");
+  const [inputPlace, setInputPlace] = useState<string>("");
   const [predictions, setPredictions] = useState<PlaceAutocompleteResult[]>([]);
   const [selectedPlace, setSelectedPlace] =
     useState<PlaceAutocompleteResult | null>(null);
@@ -19,10 +20,18 @@ export default function CreateTrip() {
   const [dates, setDates] = useState<Date[] | null>(null);
   const [tripDays, setTripDays] = useState<number>(0);
 
-  const [tripInfo, setTripInfo] = useState<{}>({});
+  type TripInfoType = {
+    location?: PlaceAutocompleteResult;
+    days?: number;
+    people?: string;
+    budget?: string;
+    photo?: string;
+  };
+
+  const [tripInfo, setTripInfo] = useState<TripInfoType>({});
 
   const updateTripInfo = (name: string, value: any) => {
-    setTripInfo({ ...tripInfo, [name]: value });
+    setTripInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
@@ -32,11 +41,11 @@ export default function CreateTrip() {
   // Fetch location suggestions
   useEffect(() => {
     const fetchPredictions = debounce(async () => {
-      const preds = await callAutocomplete(input);
+      const preds = await callAutocomplete(inputPlace);
       setPredictions(preds ?? []);
     }, 300);
-    input.length > 2 && isSelecting && fetchPredictions();
-  }, [input]);
+    inputPlace.length > 2 && isSelecting && fetchPredictions();
+  }, [inputPlace]);
 
   // Calculate days when dates change
   useEffect(() => {
@@ -53,7 +62,7 @@ export default function CreateTrip() {
 
   // Function to handle when user selects a location
   const handleSelect = async (place: PlaceAutocompleteResult) => {
-    setInput(place.description);
+    setInputPlace(place.description);
     setSelectedPlace(place);
     setPredictions([]);
     setIsSelecting(false);
@@ -65,8 +74,11 @@ export default function CreateTrip() {
       const photoRef = placeDetails.photos[0].photo_reference;
       const placePhoto = await getPlacePhoto(photoRef);
       setPhotoUrl(placePhoto);
+      updateTripInfo("photo", placePhoto);
     }
   };
+
+  // console.log(typeof photoUrl);
 
   return (
     <div className="px-5 mt-8 sm:px-20 md:px-40">
@@ -82,9 +94,9 @@ export default function CreateTrip() {
             </h2>
             <input
               type="text"
-              value={input}
+              value={inputPlace}
               onChange={(e) => {
-                setInput(e.target.value);
+                setInputPlace(e.target.value);
                 setIsSelecting(true);
               }}
               placeholder="Enter a city or a country"
@@ -118,22 +130,25 @@ export default function CreateTrip() {
                 setDates(e.value as Date[] | null);
               }}
               selectionMode="range"
-              showIcon
+              // showIcon
               className="input-primary"
             />
           </div>
           <div className="flex flex-col gap-2 ">
             <h2 className="text-xl font-semibold">How many people</h2>
             <div className="w-full flex justify-around">
-              <div className="border-2 p-2 flex justify-center rounded cursor-pointer">
-                Just Me
-              </div>
-              <div className="border-2 p-2 flex justify-center rounded cursor-pointer">
-                Us two
-              </div>
-              <div className="border-2 p-2 flex justify-center rounded cursor-pointer">
-                Group
-              </div>
+              {travelParty.map((item, index) => (
+                <div
+                  key={index}
+                  className={`border-2 p-2 flex justify-center rounded cursor-pointer font-semibold ${
+                    tripInfo.people === item.value &&
+                    "bg-gray-500 text-white border-2 border-black"
+                  } `}
+                  onClick={() => updateTripInfo("people", item.value)}
+                >
+                  {item.title}
+                </div>
+              ))}
             </div>
           </div>
 
