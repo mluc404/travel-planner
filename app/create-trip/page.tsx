@@ -19,6 +19,16 @@ export default function CreateTrip() {
   const [dates, setDates] = useState<Date[] | null>(null);
   const [tripDays, setTripDays] = useState<number>(0);
 
+  const [tripInfo, setTripInfo] = useState<{}>({});
+
+  const updateTripInfo = (name: string, value: any) => {
+    setTripInfo({ ...tripInfo, [name]: value });
+  };
+
+  useEffect(() => {
+    console.log(tripInfo);
+  }, [tripInfo]);
+
   // Fetch location suggestions
   useEffect(() => {
     const fetchPredictions = debounce(async () => {
@@ -37,6 +47,7 @@ export default function CreateTrip() {
       const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
       console.log(daysDiff);
       setTripDays(daysDiff);
+      updateTripInfo("days", daysDiff);
     }
   }, [dates]);
 
@@ -89,6 +100,7 @@ export default function CreateTrip() {
                       border-b-2 border-gray-200 last:border-b-0"
                     onClick={() => {
                       handleSelect(place);
+                      updateTripInfo("location", place);
                     }}
                   >
                     {place.description}
@@ -98,14 +110,40 @@ export default function CreateTrip() {
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 ">
             <h2 className="text-xl font-semibold">How long is your trip</h2>
             <Calendar
               value={dates}
-              onChange={(e) => setDates(e.value as Date[] | null)}
+              onChange={(e) => {
+                setDates(e.value as Date[] | null);
+              }}
               selectionMode="range"
               showIcon
               className="input-primary"
+            />
+          </div>
+          <div className="flex flex-col gap-2 ">
+            <h2 className="text-xl font-semibold">How many people</h2>
+            <div className="w-full flex justify-around">
+              <div className="border-2 p-2 flex justify-center rounded cursor-pointer">
+                Just Me
+              </div>
+              <div className="border-2 p-2 flex justify-center rounded cursor-pointer">
+                Us two
+              </div>
+              <div className="border-2 p-2 flex justify-center rounded cursor-pointer">
+                Group
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 ">
+            <h2 className="text-xl font-semibold">Your budget</h2>
+            <input
+              type="texr"
+              className="input-primary"
+              placeholder="Estimated trip budget in USD"
+              onChange={(e) => updateTripInfo("budget", e.target.value)}
             />
           </div>
           {photoUrl && (

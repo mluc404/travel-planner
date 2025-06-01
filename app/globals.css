@@ -36,18 +36,28 @@ body {
 }
 
 /* Date Picker style */
-.p-datepicker {
-  margin-top: 1rem;
-  font-size: 1.2rem;
-}
-
 .p-calendar {
   padding: 0;
+}
+.p-datepicker {
+  font-size: 1.2rem;
+  background-color: white;
+  border: 2px solid gray;
+  padding: 4px;
+  border-radius: 5px;
+  /* width: 400px; */
+  /* display: flex;
+   */
+}
+
+.p-datepicker-group-container {
+  /* color: green; */
+  /* width: 320px; */
+  /* border: 2px solid gray; */
 }
 
 .p-inputtext {
   background-color: white;
-  /* width: 70%; */
   padding: 4px;
 }
 .p-datepicker-trigger {
