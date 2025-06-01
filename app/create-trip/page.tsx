@@ -11,7 +11,11 @@ import { TripDuration } from "../components/create-trip/TripDuration";
 import { TripBudget } from "../components/create-trip/TripBudget";
 import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 
+import { API_PROMPT } from "../constants/options";
+import { generateTrip } from "../service/AiModal";
+
 export default function CreateTrip() {
+  // States for LocationInput
   const [inputPlace, setInputPlace] = useState<string>("");
   const [predictions, setPredictions] = useState<PlaceAutocompleteResult[]>([]);
   const [selectedPlace, setSelectedPlace] =
@@ -19,11 +23,12 @@ export default function CreateTrip() {
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
+  // States for TripDuration
   const [dates, setDates] = useState<Date[] | null>(null);
   const [tripDays, setTripDays] = useState<number>(0);
 
+  // State to store Trip Info
   const [tripInfo, setTripInfo] = useState<TripInfoType>({});
-
   const updateTripInfo = (name: string, value: any) => {
     setTripInfo((prev) => ({ ...prev, [name]: value }));
   };
@@ -49,6 +54,22 @@ export default function CreateTrip() {
     }
   }, [dates]);
 
+  // Function to generate trip
+  const handleGenerateTrip = async () => {
+    const FINAL_PROMPT = API_PROMPT.replace(
+      "{TripLocation}",
+      tripInfo?.location?.description ?? ""
+    )
+      .replace("{TripPeople}", tripInfo.people ?? "")
+      .replace("{TripDuration}", tripInfo.days?.toString() ?? "")
+      .replace("{TripBudget}", tripInfo.budget ?? "");
+
+    console.log(FINAL_PROMPT);
+
+    const response = await generateTrip(FINAL_PROMPT);
+    console.log(response);
+  };
+
   return (
     <div className="px-5 mt-8 sm:px-20 md:px-80">
       <h1 className="font-bold text-3xl">Trip Information</h1>
@@ -71,10 +92,7 @@ export default function CreateTrip() {
           <PeopleCount tripInfo={tripInfo} updateTripInfo={updateTripInfo} />
           <TripBudget updateTripInfo={updateTripInfo} />
           <div>
-            <button
-              className="btn-primary"
-              onClick={() => console.log(tripInfo)}
-            >
+            <button className="btn-primary" onClick={handleGenerateTrip}>
               Generate Trip
             </button>
           </div>

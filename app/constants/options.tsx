@@ -15,3 +15,6 @@ export const travelParty = [
     value: "a group",
   },
 ];
+
+export const API_PROMPT =
+  "Generate a travel plan for Location: {TripLocation}, for {TripDuration} days for {TripPeople} with a budget of {TripBudget} USD in JSON format";
