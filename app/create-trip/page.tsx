@@ -6,6 +6,7 @@ import { getPlacePhoto } from "../api/places/getPlacePhoto";
 import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js";
 import debounce from "lodash.debounce";
 import Image from "next/image";
+import { Calendar } from "primereact/calendar";
 
 export default function CreateTrip() {
   const [input, setInput] = useState<string>("");
@@ -15,6 +16,10 @@ export default function CreateTrip() {
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
+  const [dates, setDates] = useState<Date[] | null>(null);
+  const [tripDays, setTripDays] = useState<number>(0);
+
+  // Fetch location suggestions
   useEffect(() => {
     const fetchPredictions = debounce(async () => {
       const preds = await callAutocomplete(input);
@@ -23,6 +28,19 @@ export default function CreateTrip() {
     input.length > 2 && isSelecting && fetchPredictions();
   }, [input]);
 
+  // Calculate days when dates change
+  useEffect(() => {
+    if (dates && dates.length === 2) {
+      const startDate = new Date(dates[0]);
+      const endDate = new Date(dates[1]);
+      const timeDiff = endDate.getTime() - startDate.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+      console.log(daysDiff);
+      setTripDays(daysDiff);
+    }
+  }, [dates]);
+
+  // Function to handle when user selects a location
   const handleSelect = async (place: PlaceAutocompleteResult) => {
     setInput(place.description);
     setSelectedPlace(place);
@@ -30,6 +48,7 @@ export default function CreateTrip() {
     setIsSelecting(false);
     console.log(place);
 
+    // Get the photo data for that location
     const placeDetails = await getPlaceDetails(place.place_id);
     if (placeDetails.photos) {
       const photoRef = placeDetails.photos[0].photo_reference;
@@ -81,10 +100,12 @@ export default function CreateTrip() {
 
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-semibold">How long is your trip</h2>
-            <input
-              type="text"
+            <Calendar
+              value={dates}
+              onChange={(e) => setDates(e.value as Date[] | null)}
+              selectionMode="range"
+              showIcon
               className="input-primary"
-              placeholder="Enter a number"
             />
           </div>
           {photoUrl && (

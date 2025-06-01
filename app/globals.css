@@ -34,3 +34,32 @@ body {
   @apply w-full cursor-pointer px-2 py-1 text-[1rem] 
   font-semibold text-gray-700 border-2 rounded;
 }
+
+/* Date Picker style */
+.p-datepicker {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.p-calendar {
+  padding: 0;
+}
+
+.p-inputtext {
+  background-color: white;
+  /* width: 70%; */
+  padding: 4px;
+}
+.p-datepicker-trigger {
+  background-color: #428cb0;
+  width: 10%;
+}
+
+.p-datepicker-trigger svg {
+  width: 20;
+  height: 20;
+}
+.p-highlight {
+  background-color: #428cb0;
+  border: 1px solid white;
+}
