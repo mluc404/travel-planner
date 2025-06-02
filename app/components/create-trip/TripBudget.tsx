@@ -7,7 +7,7 @@ export function TripBudget({ updateTripInfo }: TripBudgetProps) {
     <div className="flex flex-col gap-2 ">
       <h2 className="text-xl font-semibold">Your budget</h2>
       <input
-        type="text"
+        type="number"
         className="input-primary"
         placeholder="Estimated trip budget in USD"
         onChange={(e) => updateTripInfo("budget", e.target.value)}

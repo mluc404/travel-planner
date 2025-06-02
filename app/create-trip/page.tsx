@@ -14,6 +14,8 @@ import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 import { API_PROMPT } from "../constants/options";
 import { generateTrip } from "../service/AiModal";
 
+import { useRouter } from "next/navigation";
+
 export default function CreateTrip() {
   // States for LocationInput
   const [inputPlace, setInputPlace] = useState<string>("");
@@ -29,7 +31,10 @@ export default function CreateTrip() {
 
   // State to store Trip Info
   const [tripInfo, setTripInfo] = useState<TripInfoType>({});
-  const updateTripInfo = (name: string, value: any) => {
+  const updateTripInfo = (
+    name: string,
+    value: string | PlaceAutocompleteResult | number
+  ) => {
     setTripInfo((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -54,27 +59,46 @@ export default function CreateTrip() {
     }
   }, [dates]);
 
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // Function to generate trip
   const handleGenerateTrip = async () => {
-    const FINAL_PROMPT = API_PROMPT.replace(
-      "{TripLocation}",
-      tripInfo?.location?.description ?? ""
-    )
-      .replace("{TripPeople}", tripInfo.people ?? "")
-      .replace("{TripDuration}", tripInfo.days?.toString() ?? "")
-      .replace("{TripBudget}", tripInfo.budget ?? "");
+    if (
+      !tripInfo.location ||
+      !tripInfo.days ||
+      !tripInfo.people ||
+      !tripInfo.budget
+    ) {
+      alert("Please fill in the trip details");
+    } else {
+      setIsLoading(true);
+      const FINAL_PROMPT = API_PROMPT.replace(
+        "{TripLocation}",
+        tripInfo?.location?.description ?? ""
+      )
+        .replace("{TripPeople}", tripInfo.people ?? "")
+        .replace("{TripDuration}", tripInfo.days?.toString() ?? "")
+        .replace("{TripBudget}", tripInfo.budget ?? "");
 
-    console.log(FINAL_PROMPT);
+      console.log(FINAL_PROMPT);
+      console.log(tripInfo);
 
-    const response = await generateTrip(FINAL_PROMPT);
-    console.log(response);
+      const response = await generateTrip(FINAL_PROMPT);
+      console.log(response);
+
+      if (response) {
+        router.push("/trip");
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
-    <div className="px-5 mt-8 sm:px-20 md:px-80">
+    <div className="px-5 mt-8 sm:px-20 md:px-40 lg:px-80">
       <h1 className="font-bold text-3xl">Trip Information</h1>
       <p className="text-gray-500 text-xl mt-2">
-        Enter your trip information and we will generate a customized interary
+        Enter your trip information and we will generate a customized itinerary
       </p>
       <div className="mt-8">
         <div className="flex flex-col gap-4">
@@ -91,11 +115,13 @@ export default function CreateTrip() {
           <TripDuration dates={dates} setDates={setDates} />
           <PeopleCount tripInfo={tripInfo} updateTripInfo={updateTripInfo} />
           <TripBudget updateTripInfo={updateTripInfo} />
-          <div>
+
+          <div className="flex justify-center">
             <button className="btn-primary" onClick={handleGenerateTrip}>
               Generate Trip
             </button>
           </div>
+          {isLoading && <div>Loading...</div>}
           {photoUrl && (
             <LocationPhoto photoUrl={photoUrl} selectedPlace={selectedPlace} />
           )}

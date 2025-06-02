@@ -1,9 +1,9 @@
+"use server";
+
 import { GoogleGenAI } from "@google/genai";
 
-const myApiKey = process.env.GOOGLE_GEMINI_API_KEY;
-
 const ai = new GoogleGenAI({
-  apiKey: "AIzaSyBfPcSPEcM3mco8D020rLx7zWmGDq0v8qY",
+  apiKey: process.env.GOOGLE_GEMINI_API_KEY,
 });
 
 export async function generateTrip(FINAL_PROMPT: string) {
@@ -16,7 +16,6 @@ export async function generateTrip(FINAL_PROMPT: string) {
       responseMimeType: "application/json",
     },
   });
-  //   console.log(response);
 
   return response.text;
 }

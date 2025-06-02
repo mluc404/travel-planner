@@ -11,7 +11,7 @@ export interface LocationInputProps {
     key: string,
     value: string | PlaceAutocompleteResult
   ) => void;
-  setPhotoUrl: (value:string)
+  setPhotoUrl: (value: string) => void;
 }
 
 export interface TripInfoType {
