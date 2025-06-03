@@ -12,12 +12,13 @@ interface TripPlan {
 interface Trip {
   id: string;
   title: string;
-  plan: TripPlan[];
+  // plan: TripPlan[];
+  plan: [];
   created_at: string;
 }
 
 export default function Trip() {
-  const [trips, setTrips] = useState<Trip[]>([]);
+  const [trips, setTrips] = useState<Trip | null>(null);
 
   const fetchTrips = async () => {
     const { data, error } = await supabase
@@ -30,15 +31,15 @@ export default function Trip() {
       const latestTrip = data[0];
       try {
         const parsedTrip = { ...latestTrip, plan: JSON.parse(latestTrip.plan) };
-        setTrips([parsedTrip as Trip]);
+        setTrips(parsedTrip);
         console.log(parsedTrip);
       } catch (e) {
         console.error("Failed to parse latest trip plan JSON:", e);
-        setTrips([latestTrip as Trip]);
+        setTrips(latestTrip as Trip);
         console.log(latestTrip);
       }
     } else {
-      setTrips([]);
+      setTrips(null);
     }
   };
 
@@ -46,22 +47,5 @@ export default function Trip() {
     fetchTrips();
   }, []);
 
-  return (
-    <div>
-      Trip Page
-      <div>
-        {trips.map((trip) => (
-          <div key={trip.id}>
-            {trip.plan && trip.plan[0] && (
-              <div>
-                <div className="font-semibold">
-                  Trip Name: {trip.plan[0].trip_name}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="p-4"></div>;
 }
