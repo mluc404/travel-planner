@@ -8,7 +8,7 @@ export async function getPlacePhotoSmall(photoRef: string) {
   const response = await client.placePhoto({
     params: {
       photoreference: photoRef,
-      maxwidth: 400,
+      maxwidth: 200,
       key: process.env.GOOGLE_PLACE_API_KEY as string,
     },
     responseType: "arraybuffer",

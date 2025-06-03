@@ -110,46 +110,36 @@ export default function Trip() {
     // });
   }
   return (
-    <div className="px-5 mt-8 sm:px-20 md:px-40 lg:px-80">
-      <div className="flex flex-col gap-4">
+    <div className="px-5 mt-8 sm:px-20 md:px-40 lg:px-60">
+      <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center">
         {trips && (
-          <div className="font-semibold text-2xl">
+          <div className="flex flex-col gap-2 w-full">
             <LocationPhoto
               photoUrl={trips.main_photo}
               selectedPlace={trips.plan[0].location}
             />
-            {trips.plan[0].trip_name}
+
+            <div className="font-semibold text-2xl">
+              {trips.plan[0].trip_name}
+            </div>
           </div>
         )}
-        {/* {trips &&
-          trips.plan[1].itinerary.map((day) => (
-            <div key={day.day} className="flex flex-col gap-2">
-              <div className="flex gap-2 font-semibold">
-                <div>Day {day.day}</div>
-                <div>{day.theme}</div>
-              </div>
-              <div>Morning</div>
 
-              <ul>
-                {day.activities.morning.map((choice, index) => (
-                  <li key={index}>
-                    <div className="underline">Location: {choice.location}</div>
-                    <div className="px-2">Activity: {choice.what_to_do}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))} */}
-
-        <div className="flex flex-col gap-4">
+        <div className="flex gap-4 flex-wrap">
           {trips &&
-            trips.plan.slice(1).map((day) =>
-              day.places.map((place, index) => (
-                <div key={index}>
-                  <PlaceCard place={place} location={trips.title.description} />
-                </div>
-              ))
-            )}
+            trips.plan.slice(1).map((day, index) => (
+              <div key={index} className="flex flex-col gap-2">
+                <div>Day {day.day}</div>
+                {day.places.map((place, index) => (
+                  <div key={index}>
+                    <PlaceCard
+                      place={place}
+                      location={trips.title.description}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
         </div>
       </div>
     </div>
