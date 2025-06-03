@@ -95,7 +95,11 @@ export default function CreateTrip() {
       if (response) {
         const { data, error } = await supabase
           .from("trips")
-          .insert({ title: tripInfo.location, plan: response })
+          .insert({
+            title: tripInfo.location,
+            plan: response,
+            main_photo: tripInfo.photo,
+          })
           .select()
           .single();
 
