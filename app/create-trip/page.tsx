@@ -168,12 +168,12 @@ export default function CreateTrip() {
           {photoUrl && (
             <LocationPhoto photoUrl={photoUrl} selectedPlace={selectedPlace} />
           )}
+
           {newPhoto && (
             <div className="relative w-full h-[200px] mt-4 sm:h-[300px] md:h-[400px]">
               This is from GetPlaceFromText
               <Image
                 src={newPhoto}
-                // alt={`Photo of ${selectedPlace?.description}`}
                 alt={`Photo of ${selectedPlace}`}
                 fill
                 className="object-cover mt-4 rounded-lg"

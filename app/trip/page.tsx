@@ -9,6 +9,8 @@ import { getPlacePhoto } from "../api/places/getPlacePhoto";
 import { getPlaceFromText } from "../components/FindPlaceFromText";
 import { FindPlaceFromTextResponseData } from "@googlemaps/google-maps-services-js";
 
+import { PlaceCard } from "../components/view-trip/PlaceCard";
+
 interface TripPlan0 {
   trip_name: string;
   location: string;
@@ -98,20 +100,25 @@ export default function Trip() {
   };
 
   // Fetch photo for the places
+
   if (trips) {
     console.log(trips.plan[1].places);
+    const itinerary = trips.plan.slice(1);
+    console.log(itinerary);
+    // trips.plan[1].places.array.forEach(place => {
+
+    // });
   }
   return (
     <div className="px-5 mt-8 sm:px-20 md:px-40 lg:px-80">
       <div className="flex flex-col gap-4">
         {trips && (
           <div className="font-semibold text-2xl">
-            {trips.plan[0].trip_name}
             <LocationPhoto
               photoUrl={trips.main_photo}
-              // selectedPlace={trips.title.description}
               selectedPlace={trips.plan[0].location}
             />
+            {trips.plan[0].trip_name}
           </div>
         )}
         {/* {trips &&
@@ -133,6 +140,17 @@ export default function Trip() {
               </ul>
             </div>
           ))} */}
+
+        <div className="flex flex-col gap-4">
+          {trips &&
+            trips.plan.slice(1).map((day) =>
+              day.places.map((place, index) => (
+                <div key={index}>
+                  <PlaceCard place={place} location={trips.title.description} />
+                </div>
+              ))
+            )}
+        </div>
       </div>
     </div>
   );
