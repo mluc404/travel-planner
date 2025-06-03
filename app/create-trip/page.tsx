@@ -15,6 +15,7 @@ import { API_PROMPT } from "../constants/options";
 import { generateTrip } from "../service/AiModal";
 
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function CreateTrip() {
   // States for LocationInput
@@ -31,6 +32,8 @@ export default function CreateTrip() {
 
   // State to store Trip Info
   const [tripInfo, setTripInfo] = useState<TripInfoType>({});
+  // const[generatedPlan, setGeneratedPlan]=useState<>
+
   const updateTripInfo = (
     name: string,
     value: string | PlaceAutocompleteResult | number
@@ -39,6 +42,7 @@ export default function CreateTrip() {
   };
 
   // Fetch location suggestions
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchPredictions = debounce(async () => {
       const preds = await callAutocomplete(inputPlace);
@@ -87,10 +91,24 @@ export default function CreateTrip() {
       const response = await generateTrip(FINAL_PROMPT);
       console.log(response);
 
+      // Insert the trip to supabase
       if (response) {
+        const { data, error } = await supabase
+          .from("trips")
+          .insert({ title: tripInfo.location, plan: response })
+          .select()
+          .single();
+
+        if (error) console.log(error.message);
+
+        // Navigate to the trip page
         router.push("/trip");
         setIsLoading(false);
       }
+      // if (response) {
+      //   router.push("/trip");
+      //   setIsLoading(false);
+      // }
     }
   };
 

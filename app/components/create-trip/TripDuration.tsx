@@ -18,6 +18,7 @@ export function TripDuration({ dates, setDates }: TripDurationProps) {
         // showIcon
         className="input-primary"
         placeholder="Select the dates"
+        dateFormat="MM d, yy"
       />
     </div>
   );
