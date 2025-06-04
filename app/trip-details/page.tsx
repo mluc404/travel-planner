@@ -31,36 +31,29 @@ interface Trip {
 }
 
 export default function Trip() {
-  const [trips, setTrips] = useState<Trip | null>(null);
+  const [trip, setTrip] = useState<Trip | null>(null);
 
-  const fetchTrips = async () => {
-    const { data, error } = await supabase
-      .from("trips")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1);
+  const fetchTrip = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("trips")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(1);
 
-    // const parsedTrip = JSON.parse(data[0]);
-    // setTrips(parseTrip);
-    // console.log(data[0].title);
-    const titleObj = JSON.parse(data[0].title);
-    // console.log(titleObj);
-    const titleString = JSON.stringify(titleObj);
-    console.log(titleString);
+      if (data && data.length > 0) {
+        const parsedTrip = {
+          ...data[0],
+          plan: JSON.parse(data[0].plan),
+          title: JSON.parse(data[0].title),
+        };
+        setTrip(parsedTrip);
+        console.log(parsedTrip);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
-    const plan = data[0].plan;
-    const planObj = JSON.parse(plan);
-    // console.log(planObj);
-    // console.log(data[0]);
-
-    const parsedTrip = {
-      ...data[0],
-      plan: JSON.parse(data[0].plan),
-      title: JSON.parse(data[0].title),
-    };
-    setTrips(parsedTrip);
-    console.log(parsedTrip);
-    // console.log(data[0].plan);
     // if (data && data.length > 0) {
     //   const latestTrip = data[0];
     //   try {
@@ -82,7 +75,7 @@ export default function Trip() {
   };
 
   useEffect(() => {
-    fetchTrips();
+    fetchTrip();
     findPhoto();
   }, []);
 
@@ -99,42 +92,44 @@ export default function Trip() {
     }
   };
 
-  // Fetch photo for the places
-
-  if (trips) {
-    console.log(trips.plan[1].places);
-    const itinerary = trips.plan.slice(1);
+  // Fetch photo for the places in itinerary
+  if (trip) {
+    console.log(trip.plan[1].places);
+    const itinerary = trip.plan.slice(1);
     console.log(itinerary);
-    // trips.plan[1].places.array.forEach(place => {
-
-    // });
   }
+
   return (
-    <div className="px-5 mt-8 sm:px-20 md:px-40 lg:px-60">
+    <div className="px-5 pb-10 mt-8 sm:px-20 md:px-40">
       <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center">
-        {trips && (
+        {/* Display main photo */}
+        {trip && (
           <div className="flex flex-col gap-2 w-full">
-            <LocationPhoto
-              photoUrl={trips.main_photo}
-              selectedPlace={trips.plan[0].location}
-            />
+            <div className="">
+              <LocationPhoto
+                photoUrl={trip.main_photo}
+                selectedPlace={trip.plan[0].location}
+              />
+            </div>
 
             <div className="font-semibold text-2xl">
-              {trips.plan[0].trip_name}
+              {trip.plan[0].trip_name}
             </div>
           </div>
         )}
 
-        <div className="flex gap-4 flex-wrap">
-          {trips &&
-            trips.plan.slice(1).map((day, index) => (
+        <div className="flex gap-4 flex-wrap justify-center">
+          {trip &&
+            trip.plan.slice(1).map((day, index) => (
               <div key={index} className="flex flex-col gap-2">
-                <div>Day {day.day}</div>
+                <div className="font-semibold text-gray-600">
+                  Day {day.day}: {day.day_theme}
+                </div>
                 {day.places.map((place, index) => (
                   <div key={index}>
                     <PlaceCard
                       place={place}
-                      location={trips.title.description}
+                      location={trip.title.description}
                     />
                   </div>
                 ))}
