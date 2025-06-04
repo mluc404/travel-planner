@@ -4,27 +4,9 @@ import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 import { PlaceCard } from "../components/view-trip/PlaceCard";
+import { Trip, TripPlan1 } from "../types";
 
-interface TripPlan0 {
-  trip_name: string;
-  location: string;
-  duration: string;
-  travelers: number;
-}
-interface TripPlan1 {
-  itinerary: [any];
-}
-
-interface Trip {
-  id: string;
-  title: { description: string };
-  // plan: TripPlan[];
-  plan: [TripPlan0, TripPlan1];
-  created_at: string;
-  main_photo: string;
-}
-
-export default function Trip() {
+export default function TripDetails() {
   const [trip, setTrip] = useState<Trip | null>(null);
 
   const fetchTrip = async () => {
@@ -39,7 +21,6 @@ export default function Trip() {
         const parsedTrip = {
           ...data[0],
           plan: JSON.parse(data[0].plan),
-          title: JSON.parse(data[0].title),
         };
         setTrip(parsedTrip);
         console.log(parsedTrip);
@@ -65,16 +46,16 @@ export default function Trip() {
                 selectedPlace={trip.plan[0].destination}
               />
             </div>
-
             <div className="font-semibold text-2xl">
               {trip.plan[0].trip_name}
             </div>
           </div>
         )}
 
+        {/* Display Itinerary */}
         <div className="flex gap-4 md:gap-8 flex-wrap justify-around lg:px-10">
           {trip &&
-            trip.plan.slice(1).map((day, index) => (
+            (trip.plan.slice(1) as TripPlan1[]).map((day, index) => (
               <div key={index} className="flex flex-col gap-2">
                 <div className="font-semibold text-gray-600">
                   Day {day.day}: {day.day_theme}

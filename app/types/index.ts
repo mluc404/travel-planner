@@ -21,3 +21,32 @@ export interface TripInfoType {
   budget?: string;
   photo?: string;
 }
+
+export interface PlaceInDayType {
+  place_name: string;
+  activity: string;
+  time_to_spend: string;
+}
+
+export interface TripPlan0 {
+  trip_name: string;
+  destination: string;
+  duration: string;
+  travelers: number;
+  place_list: string[];
+}
+
+export interface TripPlan1 {
+  day: number;
+  day_theme: string;
+  places: PlaceInDayType[];
+}
+
+export interface Trip {
+  id: string;
+  title: { description: string };
+  plan: [TripPlan0, ...TripPlan1[]];
+  created_at: string;
+  main_photo: string;
+  place_photos: { [key: string]: string };
+}

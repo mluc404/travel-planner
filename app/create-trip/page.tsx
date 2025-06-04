@@ -98,26 +98,26 @@ export default function CreateTrip() {
         const responseJson = JSON.parse(response);
         const place_list = responseJson[0].place_list;
         const destination = responseJson[0].destination;
-        console.log(place_list);
-        // Fetch the photo of places inside place_list
-        // example of place_list: ['Balboa Park', 'San Diego Zoo',...]
-        // create an object called place_photos
-        // use getPlaceFromText and getPlacePhotoSmall to fetch the photos of all the element inside place_list
-        // update place_photo: {'Balboa Park': <string returned from getPlacePhotoSmall>, 'San Diego Zoo': <string returned from getPlacePhotoSmall>}
 
         const photoPromises = place_list.map(async (place_name: string) => {
           const placeDetails = await getPlaceFromText(
             `${place_name} in ${destination}`
           );
-          const photoRef = placeDetails.candidates[0].photos[0].photo_reference;
-          const photo = await getPlacePhotoSmall(photoRef);
-          return { place_name, photo };
+          if (placeDetails?.candidates?.[0]?.photos) {
+            const photoRef =
+              placeDetails.candidates[0].photos[0].photo_reference;
+            const photo = await getPlacePhotoSmall(photoRef);
+            return { place_name, photo };
+          } else {
+            console.log(`No photo found for ${place_name}`);
+            return { place_name, photo: null };
+          }
         });
         const fetchedPhotos = await Promise.all(photoPromises);
         console.log("fetchedPhotos:", fetchedPhotos);
 
         // create an obj place_photos to store the photos (this will be a column on supabase)
-        let place_photos_obj: { [key: string]: string | null } = {};
+        const place_photos_obj: { [key: string]: string | null } = {};
         fetchedPhotos.map((place) => {
           place_photos_obj[place.place_name] = place.photo;
         });
@@ -126,7 +126,7 @@ export default function CreateTrip() {
         const { data, error } = await supabase
           .from("trips")
           .insert({
-            title: tripInfo.location,
+            destination_details: tripInfo.location,
             plan: response,
             main_photo: tripInfo.photo,
             place_photos: place_photos_obj,

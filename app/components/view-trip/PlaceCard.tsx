@@ -1,7 +1,8 @@
+import { PlaceInDayType } from "@/app/types";
 import Image from "next/image";
 
 interface PlaceCardProps {
-  place: {};
+  place: PlaceInDayType;
   photo: string;
 }
 
