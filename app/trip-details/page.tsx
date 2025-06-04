@@ -35,11 +35,11 @@ export default function TripDetails() {
   }, []);
 
   return (
-    <div className="px-5 pb-10 mt-8 sm:px-20 md:px-40">
+    <div className="px-5 pb-10 mt-8 sm:px-20 ">
       <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center">
         {/* Display main photo */}
         {trip && (
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
             <div className="">
               <LocationPhoto
                 photoUrl={trip.main_photo}
@@ -53,7 +53,7 @@ export default function TripDetails() {
         )}
 
         {/* Display Itinerary */}
-        <div className="flex gap-4 md:gap-8 flex-wrap justify-around lg:px-10">
+        <div className="flex flex-wrap gap-4 justify-center w-full md:px-4">
           {trip &&
             (trip.plan.slice(1) as TripPlan1[]).map((day, index) => (
               <div key={index} className="flex flex-col gap-2">
@@ -61,7 +61,7 @@ export default function TripDetails() {
                   Day {day.day}: {day.day_theme}
                 </div>
                 {day.places.map((place, index) => (
-                  <div key={index}>
+                  <div key={index} className="">
                     <PlaceCard
                       place={place}
                       photo={trip.place_photos[place.place_name]}

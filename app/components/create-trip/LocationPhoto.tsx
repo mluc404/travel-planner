@@ -7,7 +7,8 @@ interface LocationPhotoProps {
 }
 export function LocationPhoto({ photoUrl, selectedPlace }: LocationPhotoProps) {
   return (
-    <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px]">
+    // <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px]">
+    <div className="relative w-full h-[30vh] md:h-[max(200px,50vh)]">
       <Image
         src={photoUrl}
         alt={`Photo of ${selectedPlace}`}

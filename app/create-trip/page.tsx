@@ -116,7 +116,7 @@ export default function CreateTrip() {
         const fetchedPhotos = await Promise.all(photoPromises);
         console.log("fetchedPhotos:", fetchedPhotos);
 
-        // create an obj place_photos to store the photos (this will be a column on supabase)
+        // create an obj place_photos to store the photos
         const place_photos_obj: { [key: string]: string | null } = {};
         fetchedPhotos.map((place) => {
           place_photos_obj[place.place_name] = place.photo;
@@ -144,12 +144,12 @@ export default function CreateTrip() {
   };
 
   return (
-    <div className="px-5 mt-8 sm:px-20 md:px-40 lg:px-80">
+    <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-80">
       <h1 className="font-bold text-3xl">Trip Information</h1>
       <p className="text-gray-500 text-xl mt-2">
         Enter your trip information and we will generate a customized itinerary
       </p>
-      <div className="mt-8">
+      <div className="mt-2 sm:mt-8">
         <div className="flex flex-col gap-4">
           <LocationInput
             inputPlace={inputPlace}
@@ -165,12 +165,17 @@ export default function CreateTrip() {
           <PeopleCount tripInfo={tripInfo} updateTripInfo={updateTripInfo} />
           <TripBudget updateTripInfo={updateTripInfo} />
 
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-2 justify-center">
             <button className="btn-primary" onClick={handleGenerateTrip}>
               Generate Trip
             </button>
+            <div>Trips longer than 3 days require extra time</div>
+            {isLoading && (
+              // <div className="flex justify-center">
+              <div>Loading...</div>
+              // </div>
+            )}
           </div>
-          {isLoading && <div>Loading...</div>}
         </div>
       </div>
     </div>
