@@ -31,8 +31,9 @@ body {
 }
 
 .input-primary {
-  @apply w-full cursor-pointer p-2 text-[1rem] 
-  font-semibold text-gray-700 border-2 rounded;
+  @apply w-full cursor-pointer p-2 text-[1rem] rounded
+  font-semibold text-gray-700 bg-gray-200
+  /* border-2 border-gray-500; */;
 }
 
 /* Date Picker style */
@@ -57,8 +58,8 @@ body {
 }
 
 .p-inputtext {
-  background-color: white;
-  padding: 6px;
+  @apply w-full cursor-pointer p-2 text-[1rem] rounded
+  font-semibold text-gray-700 bg-gray-200;
 }
 .p-datepicker-trigger {
   background-color: #428cb0;

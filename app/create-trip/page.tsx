@@ -144,9 +144,9 @@ export default function CreateTrip() {
   };
 
   return (
-    <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-80">
+    <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-60 xl:px-80">
       <h1 className="font-bold text-3xl">Trip Information</h1>
-      <p className="text-gray-500 text-xl mt-2">
+      <p className="text-gray-500 text-lg mt-2">
         Enter your trip information and we will generate a customized itinerary
       </p>
       <div className="mt-2 sm:mt-8">
