@@ -125,12 +125,7 @@ export default function TripDetails() {
             Sign in to save your trip
           </button>
         </div>
-        {isSignInOpen && (
-          <Auth
-            isSignInOpen={isSignInOpen}
-            onClose={() => setIsSignInOpen(false)}
-          />
-        )}
+        {isSignInOpen && <Auth onClose={() => setIsSignInOpen(false)} />}
       </div>
     </div>
   );

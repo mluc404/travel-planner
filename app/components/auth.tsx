@@ -1,13 +1,34 @@
 import Form from "next/form";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface AuthProps {
-  isSignInOpen: boolean;
   onClose: () => void;
 }
 
-export function Auth({ isSignInOpen, onClose }: AuthProps) {
+export function Auth({ onClose }: AuthProps) {
   const [hasAccount, setHasAccount] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async () => {
+    if (!hasAccount) {
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        console.error("Error signing up" + error.message);
+        return;
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        console.error("Error signing in" + error.message);
+        return;
+      }
+    }
+  };
   return (
     <div
       className="w-[100vw] h-dvh fixed top-0 bg-black/80
@@ -39,16 +60,28 @@ export function Auth({ isSignInOpen, onClose }: AuthProps) {
 
         <Form action={""} className="flex flex-col gap-2 w-full">
           <div>
-            <div>Email</div>
-            <input type="email" className="input-primary" />
+            {/* <div>Email</div> */}
+            <input
+              type="email"
+              className="input-primary"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
           <div>
-            <div>Password</div>
-            <input type="password" className="input-primary" />
+            {/* <div>Password</div> */}
+            <input
+              type="password"
+              className="input-primary"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
-          <button className="btn-primary mt-2" onClick={(e) => onClose()}>
+          <button className="btn-primary mt-2" onClick={handleSubmit}>
             {hasAccount ? "Sign in" : " Sign up"}
           </button>
           <div
