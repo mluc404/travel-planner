@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 import { PlaceCard } from "../components/view-trip/PlaceCard";
 import { Trip, TripPlan1 } from "../types";
+import { Auth } from "../components/auth";
 
 export default function TripDetails() {
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -34,19 +35,28 @@ export default function TripDetails() {
     fetchTrip();
   }, []);
 
-  const [isDayOn, setIsDayOn] = useState<boolean>(false);
-  const [visibility, setVisibility] = useState<{ [key: number]: boolean }>({
-    1: true,
-  });
+  const [visibility, setVisibility] = useState<{ [key: number]: boolean }>({});
   const toggleDay = (dayNumber: number) => {
     setVisibility((prev) => ({ ...prev, [dayNumber]: !prev[dayNumber] }));
   };
 
+  useEffect(() => {
+    if (trip?.plan) {
+      const initialVis: { [key: number]: boolean } = {};
+      (trip.plan.slice(1) as TripPlan1[]).forEach((day) => {
+        initialVis[day.day] = true;
+      });
+      setVisibility(initialVis);
+    }
+  }, [trip]);
+
   console.log(visibility);
 
+  const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
+
   return (
-    <div className="px-5 pb-10 mt-8 sm:px-20 ">
-      <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center">
+    <div className="px-5 pb-10 mt-8 sm:px-20 min-w-[300px]">
+      <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center min-h-[70vh]">
         {/* Display main photo */}
         {trip && (
           <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
@@ -63,7 +73,7 @@ export default function TripDetails() {
         )}
 
         {/* Display Itinerary */}
-        <div className="flex flex-wrap gap-4 justify-center w-full md:px-4">
+        <div className="flex flex-wrap gap-4 sm:gap-8 justify-center w-full md:px-4">
           {trip &&
             (trip.plan.slice(1) as TripPlan1[]).map((day, index) => (
               <div
@@ -78,17 +88,21 @@ export default function TripDetails() {
                   {visibility[day.day] ? "\u25BD" : "\u25B7"} Day {day.day}:{" "}
                   {day.day_theme}
                 </div>
+
+                {/* Toggling requires setting height to prevent screen jumping back to top */}
                 <div
                   key={index}
                   className={`${
                     visibility[day.day]
-                      ? "max-h-screen opacity-100"
-                      : "max-h-0 opacity-0"
-                  } overflow-hidden flex flex-col gap-2 transition-all duration-500 ease-in-out`}
-
-                  // className={`${visibility[day.day] ? "visible" : "hidden"}  }
-                  //   flex flex-col gap-2 transition-all duration-200 ease-in-out`}
+                      ? "opacity-100 "
+                      : "opacity-0 h-0 overflow-hidden "
+                  } flex flex-col gap-2 transition-all duration-500 ease-in-out`}
                 >
+                  {/* No toggling doesnt cause screen jumping*/}
+                  {/* <div
+                  key={index}
+                  className="flex flex-col gap-2 transition-all duration-600 ease-in-out"
+                > */}
                   {day.places.map((place, index) => (
                     <PlaceCard
                       key={index}
@@ -100,6 +114,22 @@ export default function TripDetails() {
               </div>
             ))}
         </div>
+
+        {/* Button to SignIn */}
+        <div className="mt-auto">
+          <button
+            className="btn-primary"
+            onClick={() => setIsSignInOpen(!isSignInOpen)}
+          >
+            Sign in to save your trip
+          </button>
+        </div>
+        {isSignInOpen && (
+          <Auth
+            isSignInOpen={isSignInOpen}
+            onClose={() => setIsSignInOpen(false)}
+          />
+        )}
       </div>
     </div>
   );
