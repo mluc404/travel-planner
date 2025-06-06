@@ -7,13 +7,19 @@ interface AuthProps {
 }
 
 export function Auth({ onClose }: AuthProps) {
-  const [hasAccount, setHasAccount] = useState<boolean>(false);
+  const [hasAccount, setHasAccount] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async () => {
     if (!hasAccount) {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
       if (error) {
         console.error("Error signing up" + error.message);
         return;
@@ -36,17 +42,15 @@ export function Auth({ onClose }: AuthProps) {
       onClick={() => onClose()}
     >
       <div
-        className="fixed top-[20vh] z-99 w-[min(300px,80vw)] bg-white
+        className="fixed top-[20vh] z-99 w-[min(300px,80vw)] bg-white text-gray-800
          flex flex-col gap-4 justify-between items-center p-4 px-6 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full">
           {hasAccount ? (
             <div className="text-xl font-semibold">
-              Welcome back!
-              <div className="text-[1rem] font-normal">
-                Sign in to your account
-              </div>
+              Sign In
+              <div className="text-[1rem] font-normal"></div>
             </div>
           ) : (
             <div className="text-xl font-semibold">
@@ -90,7 +94,7 @@ export function Auth({ onClose }: AuthProps) {
           >
             {hasAccount ? (
               <>
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <span className="underline">Sign up</span>
               </>
             ) : (
