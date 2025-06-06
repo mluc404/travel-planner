@@ -35,6 +35,7 @@ export default function TripDetails() {
     fetchTrip();
   }, []);
 
+  // Set the drop down toggle feature for each day itinerary
   const [visibility, setVisibility] = useState<{ [key: number]: boolean }>({});
   const toggleDay = (dayNumber: number) => {
     setVisibility((prev) => ({ ...prev, [dayNumber]: !prev[dayNumber] }));
