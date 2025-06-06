@@ -17,7 +17,10 @@ export function Auth({ onClose }: AuthProps) {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo:
+            process.env.NODE_ENV === "production"
+              ? "https://travel-planner-nine-sage.vercel.app/auth/callback"
+              : `${window.location.origin}/auth/callback`,
         },
       });
       if (error) {
