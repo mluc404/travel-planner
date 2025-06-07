@@ -53,7 +53,7 @@ export interface TripPlan1 {
 // }
 
 export interface Trip {
-  id?: string;
+  id?: number;
   created_at?: string;
   email?: string;
   destination_details: PlaceAutocompleteResult;

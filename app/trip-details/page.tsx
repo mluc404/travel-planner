@@ -7,10 +7,13 @@ import { PlaceCard } from "../components/view-trip/PlaceCard";
 import { Trip, TripPlan0, TripPlan1 } from "../types";
 import { Auth } from "../components/auth";
 import { tripStorage } from "@/lib/trip-storage";
+import { useRouter } from "next/navigation";
 
 export default function TripDetails() {
   const [trip, setTrip] = useState<Trip | null>(null);
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const [session, setSession] = useState<any>(null);
+  const router = useRouter();
 
   // Fetch user session logic
   const fetchSession = async () => {
@@ -75,12 +78,16 @@ export default function TripDetails() {
   const handleSaveTrip = async () => {
     const { error } = await supabase
       .from("trips")
-      .insert({ ...trip, email: session.user.email });
+      .insert({ ...trip, email: session.user.email, isSaved: true });
     if (error) {
       console.error("Error saving trip: ", error);
+    } else {
+      setIsSaved(true);
+      tripStorage.clearTrip();
     }
     // will think about if I need to clear local storage at this point
     // after saving to supabse sucessfully, router.push to user account page?
+    router.push("/user-page");
   };
 
   // Set the drop down toggle feature for each day itinerary
@@ -115,11 +122,21 @@ export default function TripDetails() {
               <button className="btn-primary" onClick={() => handleLogout()}>
                 Logout
               </button>
+              {!isSaved && (
+                <button
+                  className="btn-primary ml-4"
+                  onClick={() => handleSaveTrip()}
+                >
+                  Save Trip
+                </button>
+              )}
               <button
                 className="btn-primary ml-4"
-                onClick={() => handleSaveTrip()}
+                onClick={() => {
+                  router.push("/user-page");
+                }}
               >
-                Save Trip
+                Account
               </button>
             </div>
           )}
@@ -185,14 +202,17 @@ export default function TripDetails() {
         </div>
 
         {/* Button to SignIn */}
-        <div className="mt-auto">
-          <button
-            className="btn-primary"
-            onClick={() => setIsSignInOpen(!isSignInOpen)}
-          >
-            Sign in to save your trip
-          </button>
-        </div>
+        {!session && (
+          <div className="mt-auto">
+            <button
+              className="btn-primary"
+              onClick={() => setIsSignInOpen(!isSignInOpen)}
+            >
+              Sign in to save your trip
+            </button>
+          </div>
+        )}
+
         {isSignInOpen && <Auth onClose={() => setIsSignInOpen(false)} />}
       </div>
     </div>

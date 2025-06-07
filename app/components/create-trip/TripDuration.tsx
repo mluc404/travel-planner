@@ -19,6 +19,8 @@ export function TripDuration({ dates, setDates }: TripDurationProps) {
         className="input-primary"
         placeholder="Select the dates"
         dateFormat="MM d, yy"
+        // readOnlyInput
+        // hideOnRangeSelection
       />
     </div>
   );

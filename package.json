@@ -20,6 +20,8 @@
     "next": "15.3.3",
     "primereact": "^10.9.5",
     "react": "^19.0.0",
+    "react-date-range": "^2.0.1",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.0.0",
     "react-google-autocomplete": "^2.7.5"
   },
