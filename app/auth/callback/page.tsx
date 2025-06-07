@@ -7,15 +7,43 @@ import { supabase } from "@/lib/supabase";
 export default function AuthCallBack() {
   const router = useRouter();
 
-  useEffect(() => {
-    // Handle the auth callback
+  //   useEffect(() => {
+  //     // Handle the auth callback
+  //     supabase.auth.onAuthStateChange((event, session) => {
+  //       if (event === "SIGNED_IN") {
+  //         // redirect to the trip details display earlier
+  //         router.push("/trip-details");
+  //       }
+  //       console.log(session);
+  //     });
+  //   }, [router]);
 
-    supabase.auth.onAuthStateChange((event, session) => {
+  useEffect(() => {
+    // Get the current session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error("Error getting session:", error);
+        return;
+      }
+      console.log("Current session:", session);
+    });
+
+    // Set up the auth state change listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth event:", event);
+      console.log("Session data:", session);
+
       if (event === "SIGNED_IN") {
-        // redirect to the trip details display earlier
         router.push("/trip-details");
       }
     });
+
+    // Cleanup subscription on unmount
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [router]);
 
   return (

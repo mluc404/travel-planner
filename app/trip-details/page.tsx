@@ -9,7 +9,30 @@ import { Auth } from "../components/auth";
 
 export default function TripDetails() {
   const [trip, setTrip] = useState<Trip | null>(null);
+  const [session, setSession] = useState<any>(null);
 
+  // Fetch user session logic
+  const fetchSession = async () => {
+    const currentSession = await supabase.auth.getSession();
+    console.log("current session in Trip Details page", currentSession.data);
+    setSession(currentSession.data.session);
+  };
+  useEffect(() => {
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+      }
+    );
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  // Fetch trip logic
   const fetchTrip = async () => {
     try {
       const { data, error } = await supabase
@@ -51,12 +74,22 @@ export default function TripDetails() {
     }
   }, [trip]);
 
-  console.log(visibility);
+  // console.log(visibility);
 
   const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
 
   return (
     <div className="px-5 pb-10 mt-8 sm:px-20 min-w-[300px]">
+      <div className="flex justify-around items-center p-4">
+        <div className="font-semibold">
+          User: {session ? <span>{session.user.email}</span> : <span>'_'</span>}
+        </div>
+        <div>
+          <button className="btn-primary" onClick={() => handleLogout()}>
+            Logout
+          </button>
+        </div>
+      </div>
       <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center min-h-[70vh]">
         {/* Display main photo */}
         {trip && (
