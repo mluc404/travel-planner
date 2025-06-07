@@ -139,18 +139,18 @@ export default function CreateTrip() {
         console.log("Local Stored Trip", localStoredTrip);
 
         // now insert the trip into supabase table "trips"
-        const { data, error } = await supabase
-          .from("trips")
-          .insert({
-            destination_details: tripInfo.location,
-            plan: response,
-            main_photo: tripInfo.photo,
-            place_photos: place_photos_obj,
-          })
-          .select()
-          .single();
-
-        if (error) console.log(error.message);
+        // only do this for authenticated users
+        // const { data, error } = await supabase
+        //   .from("trips")
+        //   .insert({
+        //     destination_details: tripInfo.location,
+        //     plan: JSON.parse(response),
+        //     main_photo: tripInfo.photo,
+        //     place_photos: place_photos_obj,
+        //   })
+        //   .select()
+        //   .single();
+        // if (error) console.log(error.message);
 
         // Navigate to the trip page
         router.push("/trip-details");

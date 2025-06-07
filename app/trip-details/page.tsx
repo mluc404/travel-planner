@@ -72,7 +72,16 @@ export default function TripDetails() {
     }
   }, []);
 
-  const handleSaveTrip = () => {};
+  const handleSaveTrip = async () => {
+    const { error } = await supabase
+      .from("trips")
+      .insert({ ...trip, email: session.user.email });
+    if (error) {
+      console.error("Error saving trip: ", error);
+    }
+    // will think about if I need to clear local storage at this point
+    // after saving to supabse sucessfully, router.push to user account page?
+  };
 
   // Set the drop down toggle feature for each day itinerary
   const [visibility, setVisibility] = useState<{ [key: number]: boolean }>({});
@@ -101,12 +110,19 @@ export default function TripDetails() {
           User: {session ? <span>{session.user.email}</span> : <span></span>}
         </div>
         <div>
-          <button className="btn-primary" onClick={() => handleLogout()}>
-            Logout
-          </button>
-          <button className="btn-primary" onClick={() => handleSaveTrip()}>
-            Save Trip
-          </button>
+          {session && (
+            <div>
+              <button className="btn-primary" onClick={() => handleLogout()}>
+                Logout
+              </button>
+              <button
+                className="btn-primary ml-4"
+                onClick={() => handleSaveTrip()}
+              >
+                Save Trip
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center min-h-[70vh]">
