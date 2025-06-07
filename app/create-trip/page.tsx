@@ -19,6 +19,9 @@ import { supabase } from "@/lib/supabase";
 import { getPlaceFromText } from "../components/FindPlaceFromText";
 import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
 
+import { tripStorage } from "@/lib/trip-storage";
+import { Trip } from "../types";
+
 export default function CreateTrip() {
   // States for LocationInput
   const [inputPlace, setInputPlace] = useState<string>("");
@@ -99,6 +102,7 @@ export default function CreateTrip() {
         const place_list = responseJson[0].place_list;
         const destination = responseJson[0].destination;
 
+        // Get photos of the places in itinerary
         const photoPromises = place_list.map(async (place_name: string) => {
           const placeDetails = await getPlaceFromText(
             `${place_name} in ${destination}`
@@ -114,15 +118,27 @@ export default function CreateTrip() {
           }
         });
         const fetchedPhotos = await Promise.all(photoPromises);
-        console.log("fetchedPhotos:", fetchedPhotos);
+        // console.log("fetchedPhotos:", fetchedPhotos);
 
         // create an obj place_photos to store the photos
         const place_photos_obj: { [key: string]: string | null } = {};
         fetchedPhotos.map((place) => {
           place_photos_obj[place.place_name] = place.photo;
         });
-        console.log("place_photos_obj:", place_photos_obj);
+        // console.log("place_photos_obj:", place_photos_obj);
 
+        // Save pending trip to local storage
+        const pendingTrip: Trip = {
+          destination_details: tripInfo.location,
+          plan: response,
+          main_photo: tripInfo.photo ?? null,
+          place_photos: place_photos_obj,
+        };
+        tripStorage.saveTrip(pendingTrip);
+        const localStoredTrip = tripStorage.getTrip();
+        console.log("Local Stored Trip", localStoredTrip);
+
+        // now insert the trip into supabase table "trips"
         const { data, error } = await supabase
           .from("trips")
           .insert({

@@ -4,8 +4,9 @@ import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 import { PlaceCard } from "../components/view-trip/PlaceCard";
-import { Trip, TripPlan1 } from "../types";
+import { Trip, TripPlan0, TripPlan1 } from "../types";
 import { Auth } from "../components/auth";
+import { tripStorage } from "@/lib/trip-storage";
 
 export default function TripDetails() {
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -54,9 +55,24 @@ export default function TripDetails() {
     }
   };
 
+  // useEffect(() => {
+  //   fetchTrip();
+  // }, []);
+
+  // Fetch local stored trip
   useEffect(() => {
-    fetchTrip();
+    const localStoredTrip = tripStorage.getTrip();
+    if (localStoredTrip) {
+      const parsedTrip = {
+        ...localStoredTrip,
+        plan: JSON.parse(localStoredTrip.plan),
+      };
+      setTrip(parsedTrip);
+      console.log(parsedTrip);
+    }
   }, []);
+
+  const handleSaveTrip = () => {};
 
   // Set the drop down toggle feature for each day itinerary
   const [visibility, setVisibility] = useState<{ [key: number]: boolean }>({});
@@ -82,11 +98,14 @@ export default function TripDetails() {
     <div className="px-5 pb-10 mt-8 sm:px-20 min-w-[300px]">
       <div className="flex justify-around items-center p-4">
         <div className="font-semibold">
-          User: {session ? <span>{session.user.email}</span> : <span>'_'</span>}
+          User: {session ? <span>{session.user.email}</span> : <span></span>}
         </div>
         <div>
           <button className="btn-primary" onClick={() => handleLogout()}>
             Logout
+          </button>
+          <button className="btn-primary" onClick={() => handleSaveTrip()}>
+            Save Trip
           </button>
         </div>
       </div>
@@ -97,11 +116,11 @@ export default function TripDetails() {
             <div className="">
               <LocationPhoto
                 photoUrl={trip.main_photo}
-                selectedPlace={trip.plan[0].destination}
+                selectedPlace={(trip.plan[0] as TripPlan0).destination}
               />
             </div>
             <div className="font-semibold text-2xl">
-              {trip.plan[0].trip_name}
+              {(trip.plan[0] as TripPlan0).trip_name}
             </div>
           </div>
         )}
