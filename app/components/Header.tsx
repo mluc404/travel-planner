@@ -1,7 +1,10 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "../context/SessionContext";
 
 export default function Header() {
+  const session = useSession();
   return (
     <div
       className="p-2 flex justify-between items-center 
@@ -18,9 +21,11 @@ export default function Header() {
         <Link href="/create-trip">
           <button className="btn-primary">Create Trip</button>
         </Link>
-        <Link href="/user-page">
-          <button className="btn-primary">Account</button>
-        </Link>
+        {session && (
+          <Link href="/user-page">
+            <button className="btn-primary">Account</button>
+          </Link>
+        )}
       </div>
     </div>
   );

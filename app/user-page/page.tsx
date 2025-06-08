@@ -4,22 +4,26 @@ import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { Trip, TripPlan0 } from "../types";
 import { LocationPhoto } from "../components/create-trip/LocationPhoto";
+import { useSession } from "../context/SessionContext";
 
 export default function UserPage() {
-  const [session, setSession] = useState<Session | null>(null);
+  const session = useSession();
+  //   const [session, setSession] = useState<Session | null>(null);
   const [allTrips, setAllTrips] = useState<Trip[] | null>(null);
-  useEffect(() => {
-    fetchSession();
-  }, []);
+
+  //   useEffect(() => {
+  //     fetchSession();
+  //   }, []);
 
   // Function to fetch the user session
-  const fetchSession = async () => {
-    const currentSession = await supabase.auth.getSession();
-    if (currentSession) {
-      console.log("current session: ", currentSession.data.session);
-      setSession(currentSession.data.session);
-    }
-  };
+  //   const fetchSession = async () => {
+  //     const currentSession = await supabase.auth.getSession();
+  //     if (currentSession) {
+  //       console.log("current session: ", currentSession.data.session);
+  //       setSession(currentSession.data.session);
+  //     }
+  //   };
+
   useEffect(() => {
     fetchData();
   }, [session]);
@@ -52,10 +56,22 @@ export default function UserPage() {
     fetchData();
   };
 
+  //
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
+
   return (
     <div className="p-4">
       User Account Page
-      <div>User: {session?.user.email}</div>
+      <div className="flex gap-4">
+        <div>User: {session?.user.email}</div>
+        {session && (
+          <button className="btn-primary" onClick={() => handleSignOut()}>
+            Sign Out
+          </button>
+        )}
+      </div>
       <div className="flex flex-col gap-4">
         {allTrips &&
           allTrips.map((trip, index) => (
