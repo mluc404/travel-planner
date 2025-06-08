@@ -6,6 +6,7 @@ import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 import { useSession } from "../context/SessionContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import TripCard from "../components/view-trip/TripCard";
 
 export default function UserPage() {
   const session = useSession();
@@ -72,15 +73,7 @@ export default function UserPage() {
           allTrips &&
           allTrips.map((trip, index) => (
             <div key={index}>
-              <div className="font-semibold">
-                {(trip.plan[0] as TripPlan0).trip_name}
-              </div>
-              <div className="w-[300px]">
-                <LocationPhoto
-                  photoUrl={trip.main_photo}
-                  selectedPlace={(trip.plan[0] as TripPlan0).destination}
-                />
-              </div>
+              <TripCard trip={trip} />
               <button // button to delete a trip
                 className="btn-primary"
                 onClick={() => handleDelete(trip.id as number)}

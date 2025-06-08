@@ -8,7 +8,8 @@ interface LocationPhotoProps {
 export function LocationPhoto({ photoUrl, selectedPlace }: LocationPhotoProps) {
   return (
     // <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px]">
-    <div className="relative w-full h-[50vw] sm:h-[30vw]">
+    // <div className="relative w-full h-[50vw] sm:h-[30vw]">
+    <>
       {photoUrl && (
         <Image
           src={photoUrl}
@@ -17,6 +18,7 @@ export function LocationPhoto({ photoUrl, selectedPlace }: LocationPhotoProps) {
           className="object-cover rounded-lg"
         />
       )}
-    </div>
+    </>
+    // </div>
   );
 }

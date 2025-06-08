@@ -77,7 +77,8 @@ export default function TripDetails() {
         {/* Display main photo */}
         {trip && (
           <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
-            <div className="">
+            {/* <div className=""> */}
+            <div className="relative w-[100%] h-[50vw] sm:h-[30vw]">
               <LocationPhoto
                 photoUrl={trip.main_photo}
                 selectedPlace={(trip.plan[0] as TripPlan0).destination}
