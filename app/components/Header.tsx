@@ -4,15 +4,13 @@ import Link from "next/link";
 import { useSession } from "../context/SessionContext";
 import { Auth } from "./auth";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const session = useSession();
   const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
+  const pathName = usePathname();
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
   return (
     <div
       className="p-2 flex justify-between items-center 
@@ -29,18 +27,23 @@ export default function Header() {
           <div className="mt-auto">
             <button
               className="btn-primary"
-              onClick={() => setIsSignInOpen(!isSignInOpen)}
+              onClick={() => {
+                setIsSignInOpen(!isSignInOpen);
+                console.log(pathName);
+              }}
             >
               Sign in
             </button>
           </div>
         )}
 
-        {isSignInOpen && <Auth onClose={() => setIsSignInOpen(false)} />}
+        {isSignInOpen && (
+          <Auth
+            onClose={() => setIsSignInOpen(false)}
+            redirectPath={pathName}
+          />
+        )}
 
-        {/* <Link href="/create-trip">
-          <button className="btn-primary">Create Trip</button>
-        </Link> */}
         {session && (
           <Link href="/user-page">
             <button className="btn-primary">Account</button>

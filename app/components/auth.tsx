@@ -4,15 +4,20 @@ import { supabase } from "@/lib/supabase";
 
 interface AuthProps {
   onClose: () => void;
+  redirectPath?: string;
 }
 
-export function Auth({ onClose }: AuthProps) {
+export function Auth({ onClose, redirectPath }: AuthProps) {
   const [hasAccount, setHasAccount] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async () => {
     if (!hasAccount) {
+      // store the redirected path to redirect user after signing up
+      if (redirectPath) {
+        localStorage.setItem("authRedirectPath", redirectPath);
+      }
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -40,7 +45,7 @@ export function Auth({ onClose }: AuthProps) {
   };
   return (
     <div
-      className="w-[100vw] h-dvh fixed top-0 bg-black/80
+      className="w-[100vw] h-dvh fixed top-0 left-0 bg-black/80 z-98
        flex justify-center items-center"
       onClick={() => onClose()}
     >

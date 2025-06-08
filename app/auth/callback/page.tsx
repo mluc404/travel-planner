@@ -24,7 +24,10 @@ export default function AuthCallBack() {
         console.log("Session data:", session);
 
         if (event === "SIGNED_IN") {
-          router.push("/trip-details");
+          // redirect users based on where they clicked sign up
+          const redirectPath = localStorage.getItem("authRedirectPath") || "/";
+          localStorage.removeItem("authRedirectPath");
+          router.push(redirectPath);
         }
       }
     );
