@@ -1,6 +1,7 @@
 import Form from "next/form";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 interface AuthProps {
   onClose: () => void;
@@ -11,10 +12,11 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
   const [hasAccount, setHasAccount] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     if (!hasAccount) {
-      // store the redirected path to redirect user after signing up
+      // Store the redirected path to redirect user after signing up
       if (redirectPath) {
         localStorage.setItem("authRedirectPath", redirectPath);
       }
@@ -40,6 +42,12 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
       if (error) {
         console.error("Error signing in" + error.message);
         return;
+      }
+
+      // If sign in is successful and user is on home page, redirect to user account page
+      // Doing this improves UX
+      if (redirectPath === "/") {
+        router.push("/user-page");
       }
     }
   };
