@@ -54,6 +54,7 @@ export interface TripPlan1 {
 
 export interface Trip {
   id?: number;
+  user_id?: string;
   created_at?: string;
   email?: string;
   destination_details: PlaceAutocompleteResult;

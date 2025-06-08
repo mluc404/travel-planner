@@ -76,9 +76,12 @@ export default function TripDetails() {
   }, []);
 
   const handleSaveTrip = async () => {
-    const { error } = await supabase
-      .from("trips")
-      .insert({ ...trip, email: session.user.email, isSaved: true });
+    const { error } = await supabase.from("trips").insert({
+      ...trip,
+      user_id: session.user.id,
+      email: session.user.email,
+      isSaved: true,
+    });
     if (error) {
       console.error("Error saving trip: ", error);
     } else {

@@ -16,7 +16,7 @@ export default function UserPage() {
   const fetchSession = async () => {
     const currentSession = await supabase.auth.getSession();
     if (currentSession) {
-      console.log(currentSession.data.session);
+      console.log("current session: ", currentSession.data.session);
       setSession(currentSession.data.session);
     }
   };
