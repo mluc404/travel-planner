@@ -10,6 +10,13 @@ import { tripStorage } from "@/lib/trip-storage";
 import { useRouter } from "next/navigation";
 import { useSession } from "../context/SessionContext";
 
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 export default function TripDetails() {
   const session = useSession();
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -50,41 +57,21 @@ export default function TripDetails() {
     router.push("/user-page");
   };
 
-  // Set the drop down toggle feature for each day itinerary
-  const [visibility, setVisibility] = useState<{ [key: number]: boolean }>({});
-  const toggleDay = (dayNumber: number) => {
-    setVisibility((prev) => ({ ...prev, [dayNumber]: !prev[dayNumber] }));
-  };
-
-  useEffect(() => {
-    if (trip?.plan) {
-      const initialVis: { [key: number]: boolean } = {};
-      (trip.plan.slice(1) as TripPlan1[]).forEach((day) => {
-        initialVis[day.day] = true;
-      });
-      setVisibility(initialVis);
-    }
-  }, [trip]);
-
-  // console.log(visibility);
-
   const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
 
   return (
-    <div className="px-5 pb-10 mt-8 sm:px-20 min-w-[300px]">
-      <div className="flex justify-around items-center p-4"></div>
-      <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center min-h-[70vh]">
+    <div className="w-full min-w-[300px] px-4 pb-10 mt-8 sm:px-20 flex flex-col items-center">
+      <div className="w-full md:w-[70%] flex flex-col gap-4 sm:gap-10 justify-center items-center">
         {/* Display main photo */}
         {trip && (
-          <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
-            {/* <div className=""> */}
-            <div className="relative w-[100%] h-[50vw] sm:h-[30vw]">
+          // <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
+          <div className="flex flex-col gap-2 w-full ">
+            <div className="relative w-full h-[50vw] sm:h-[30vw]">
               <LocationPhoto
                 photoUrl={trip.main_photo}
                 selectedPlace={(trip.plan[0] as TripPlan0).destination}
               />
             </div>
-
             <div className="flex justify-between">
               <div className="font-semibold text-2xl">
                 {(trip.plan[0] as TripPlan0).trip_name}
@@ -105,45 +92,41 @@ export default function TripDetails() {
           </div>
         )}
 
-        {/* Display Itinerary */}
-        <div className="flex flex-wrap gap-4 sm:gap-8 justify-center w-full md:px-4">
+        {/* Display Itinerary using Accordion */}
+        <div className="w-full flex flex-wrap gap-4 sm:gap-8 justify-center ">
           {trip &&
             (trip.plan.slice(1) as TripPlan1[]).map((day, index) => (
-              <div
-                key={index}
-                className="flex flex-col gap-2 w-full sm:w-[350px] lg:w-[400px]"
-              >
-                <div
-                  className="font-semibold text-white hover:cursor-pointer
-                  text-lg bg-gray-600 px-2 py-1 rounded "
-                  onClick={() => toggleDay(day.day)}
+              <div key={index} className="w-full sm:w-[80%]">
+                <Accordion
+                  defaultExpanded={index === 0}
+                  sx={{ backgroundColor: "white" }}
                 >
-                  {visibility[day.day] ? "\u25BD" : "\u25B7"} Day {day.day}:{" "}
-                  {day.day_theme}
-                </div>
-
-                {/* Toggling requires setting height to prevent screen jumping back to top */}
-                <div
-                  key={index}
-                  className={`${
-                    visibility[day.day]
-                      ? "opacity-100 "
-                      : "opacity-0 h-0 overflow-hidden "
-                  } flex flex-col gap-2 transition-all duration-500 ease-in-out`}
-                >
-                  {/* No toggling doesnt cause screen jumping*/}
-                  {/* <div
-                  key={index}
-                  className="flex flex-col gap-2 transition-all duration-600 ease-in-out"
-                > */}
-                  {day.places.map((place, index) => (
-                    <PlaceCard
-                      key={index}
-                      place={place}
-                      photo={trip.place_photos[place.place_name]}
-                    />
-                  ))}
-                </div>
+                  <AccordionSummary
+                    expandIcon={<ArrowDownwardIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                  >
+                    <div className="font-semibold text-gray-700 text-[1.05rem]">
+                      Day {day.day}: {day.day_theme}
+                    </div>
+                  </AccordionSummary>
+                  <AccordionDetails
+                    sx={{
+                      padding: 1,
+                      "@media (min-width: 600px)": { padding: 2 },
+                    }}
+                    // className="flex flex-col gap-2 bg-[#2e3339]"
+                    className="flex flex-col gap-2 bg-[#2e3339] text-white"
+                  >
+                    {day.places.map((place, index) => (
+                      <PlaceCard
+                        key={index}
+                        place={place}
+                        photo={trip.place_photos[place.place_name]}
+                      />
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
               </div>
             ))}
         </div>
