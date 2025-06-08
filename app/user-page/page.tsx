@@ -1,28 +1,16 @@
 "use client";
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
 import { Trip, TripPlan0 } from "../types";
 import { LocationPhoto } from "../components/create-trip/LocationPhoto";
 import { useSession } from "../context/SessionContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function UserPage() {
   const session = useSession();
-  //   const [session, setSession] = useState<Session | null>(null);
   const [allTrips, setAllTrips] = useState<Trip[] | null>(null);
-
-  //   useEffect(() => {
-  //     fetchSession();
-  //   }, []);
-
-  // Function to fetch the user session
-  //   const fetchSession = async () => {
-  //     const currentSession = await supabase.auth.getSession();
-  //     if (currentSession) {
-  //       console.log("current session: ", currentSession.data.session);
-  //       setSession(currentSession.data.session);
-  //     }
-  //   };
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -35,6 +23,7 @@ export default function UserPage() {
       const { data, error } = await supabase
         .from("trips")
         .select()
+        .order("created_at", { ascending: false })
         .eq("email", email); // safety net. not necessary since RLS already restricts, but just in case
 
       if (data && data.length > 0) {
@@ -59,6 +48,7 @@ export default function UserPage() {
   //
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    router.push("/");
   };
 
   return (
@@ -72,8 +62,14 @@ export default function UserPage() {
           </button>
         )}
       </div>
+      <div>
+        <Link href="/create-trip">
+          <button className="btn-primary">Create Trip</button>
+        </Link>
+      </div>
       <div className="flex flex-col gap-4">
-        {allTrips &&
+        {session &&
+          allTrips &&
           allTrips.map((trip, index) => (
             <div key={index}>
               <div className="font-semibold">

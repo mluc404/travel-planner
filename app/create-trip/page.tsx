@@ -14,7 +14,6 @@ import { API_PROMPT } from "../constants/options";
 import { generateTrip } from "../service/AiModal";
 
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 
 import { getPlaceFromText } from "../components/FindPlaceFromText";
 import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
@@ -96,7 +95,7 @@ export default function CreateTrip() {
       const response = await generateTrip(FINAL_PROMPT);
       console.log(response);
 
-      // Insert the trip to supabase
+      // Process response from gemini
       if (response) {
         const responseJson = JSON.parse(response);
         const place_list = responseJson[0].place_list;
@@ -118,14 +117,12 @@ export default function CreateTrip() {
           }
         });
         const fetchedPhotos = await Promise.all(photoPromises);
-        // console.log("fetchedPhotos:", fetchedPhotos);
 
         // create an obj place_photos to store the photos
         const place_photos_obj: { [key: string]: string | null } = {};
         fetchedPhotos.map((place) => {
           place_photos_obj[place.place_name] = place.photo;
         });
-        // console.log("place_photos_obj:", place_photos_obj);
 
         // Save pending trip to local storage
         const pendingTrip: Trip = {
@@ -137,20 +134,6 @@ export default function CreateTrip() {
         tripStorage.saveTrip(pendingTrip);
         const localStoredTrip = tripStorage.getTrip();
         console.log("Local Stored Trip", localStoredTrip);
-
-        // now insert the trip into supabase table "trips"
-        // only do this for authenticated users
-        // const { data, error } = await supabase
-        //   .from("trips")
-        //   .insert({
-        //     destination_details: tripInfo.location,
-        //     plan: JSON.parse(response),
-        //     main_photo: tripInfo.photo,
-        //     place_photos: place_photos_obj,
-        //   })
-        //   .select()
-        //   .single();
-        // if (error) console.log(error.message);
 
         // Navigate to the trip page
         router.push("/trip-details");
@@ -187,9 +170,8 @@ export default function CreateTrip() {
             </button>
             <div>Trips longer than 3 days require extra time</div>
             {isLoading && (
-              // <div className="flex justify-center">
+              // will use animated graphics
               <div>Loading...</div>
-              // </div>
             )}
           </div>
         </div>

@@ -8,59 +8,13 @@ import { Trip, TripPlan0, TripPlan1 } from "../types";
 import { Auth } from "../components/auth";
 import { tripStorage } from "@/lib/trip-storage";
 import { useRouter } from "next/navigation";
+import { useSession } from "../context/SessionContext";
 
 export default function TripDetails() {
+  const session = useSession();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const [session, setSession] = useState<any>(null);
   const router = useRouter();
-
-  // Fetch user session logic
-  const fetchSession = async () => {
-    const currentSession = await supabase.auth.getSession();
-    console.log("current session in Trip Details page", currentSession.data);
-    setSession(currentSession.data.session);
-  };
-  useEffect(() => {
-    fetchSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-      }
-    );
-    return () => authListener.subscription.unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-  };
-
-  // Fetch trip logic
-  const fetchTrip = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("trips")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(1);
-
-      if (data && data.length > 0) {
-        const parsedTrip = {
-          ...data[0],
-          plan: JSON.parse(data[0].plan),
-        };
-        setTrip(parsedTrip);
-        console.log(parsedTrip);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   fetchTrip();
-  // }, []);
 
   // Fetch local stored trip
   useEffect(() => {
@@ -75,7 +29,10 @@ export default function TripDetails() {
     }
   }, []);
 
+  // Allow user to save the trip to supabase once they're signed in
   const handleSaveTrip = async () => {
+    if (!session) return;
+
     const { error } = await supabase.from("trips").insert({
       ...trip,
       user_id: session.user.id,
@@ -86,7 +43,7 @@ export default function TripDetails() {
       console.error("Error saving trip: ", error);
     } else {
       setIsSaved(true);
-      tripStorage.clearTrip();
+      // tripStorage.clearTrip();
     }
     // will think about if I need to clear local storage at this point
     // after saving to supabse sucessfully, router.push to user account page?
@@ -115,36 +72,7 @@ export default function TripDetails() {
 
   return (
     <div className="px-5 pb-10 mt-8 sm:px-20 min-w-[300px]">
-      <div className="flex justify-around items-center p-4">
-        <div className="font-semibold">
-          User: {session ? <span>{session.user.email}</span> : <span></span>}
-        </div>
-        <div>
-          {session && (
-            <div>
-              <button className="btn-primary" onClick={() => handleLogout()}>
-                Logout
-              </button>
-              {!isSaved && (
-                <button
-                  className="btn-primary ml-4"
-                  onClick={() => handleSaveTrip()}
-                >
-                  Save Trip
-                </button>
-              )}
-              <button
-                className="btn-primary ml-4"
-                onClick={() => {
-                  router.push("/user-page");
-                }}
-              >
-                Account
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+      <div className="flex justify-around items-center p-4"></div>
       <div className="flex flex-col gap-4 sm:gap-10 justify-center items-center min-h-[70vh]">
         {/* Display main photo */}
         {trip && (
@@ -155,8 +83,23 @@ export default function TripDetails() {
                 selectedPlace={(trip.plan[0] as TripPlan0).destination}
               />
             </div>
-            <div className="font-semibold text-2xl">
-              {(trip.plan[0] as TripPlan0).trip_name}
+
+            <div className="flex justify-between">
+              <div className="font-semibold text-2xl">
+                {(trip.plan[0] as TripPlan0).trip_name}
+              </div>
+              {session && (
+                <div>
+                  {!isSaved && (
+                    <button
+                      className="btn-primary ml-4"
+                      onClick={() => handleSaveTrip()}
+                    >
+                      Save Trip
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}

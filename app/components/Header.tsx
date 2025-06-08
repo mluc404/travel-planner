@@ -2,9 +2,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "../context/SessionContext";
+import { Auth } from "./auth";
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Header() {
   const session = useSession();
+  const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
   return (
     <div
       className="p-2 flex justify-between items-center 
@@ -17,10 +25,22 @@ export default function Header() {
         </div>
       </Link>
       <div className="flex gap-4">
-        <button className="btn-primary">Sign In</button>
-        <Link href="/create-trip">
+        {!session && (
+          <div className="mt-auto">
+            <button
+              className="btn-primary"
+              onClick={() => setIsSignInOpen(!isSignInOpen)}
+            >
+              Sign in
+            </button>
+          </div>
+        )}
+
+        {isSignInOpen && <Auth onClose={() => setIsSignInOpen(false)} />}
+
+        {/* <Link href="/create-trip">
           <button className="btn-primary">Create Trip</button>
-        </Link>
+        </Link> */}
         {session && (
           <Link href="/user-page">
             <button className="btn-primary">Account</button>

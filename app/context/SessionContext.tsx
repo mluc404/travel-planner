@@ -24,7 +24,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const fetchSession = async () => {
       const currentSession = await supabase.auth.getSession();
-      console.log("current session: ", currentSession.data.session);
+      console.log("intitial session: ", currentSession.data.session);
       setSession(currentSession.data.session);
     };
     fetchSession();
@@ -32,6 +32,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
+        console.log("Auth state changed: ", event, session);
       }
     );
 
