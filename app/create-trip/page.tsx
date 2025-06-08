@@ -57,13 +57,15 @@ export default function CreateTrip() {
 
   // Calculate days when dates change
   useEffect(() => {
-    if (dates && dates.length === 2) {
+    if (dates && dates.length === 2 && dates[1]) {
       const startDate = new Date(dates[0]);
       const endDate = new Date(dates[1]);
       const timeDiff = endDate.getTime() - startDate.getTime();
       const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
       setTripDays(daysDiff);
       updateTripInfo("days", daysDiff);
+    } else {
+      updateTripInfo("days", 0);
     }
   }, [dates]);
 
@@ -72,12 +74,12 @@ export default function CreateTrip() {
 
   // Function to generate trip
   const handleGenerateTrip = async () => {
-    if (
-      !tripInfo.location ||
-      !tripInfo.days ||
-      !tripInfo.people ||
-      !tripInfo.budget
-    ) {
+    if (tripInfo.days === 0) {
+      alert("Please select an end date");
+      return;
+    }
+
+    if (!tripInfo.location || !tripInfo.people || !tripInfo.budget) {
       alert("Please fill in the trip details");
     } else {
       setIsLoading(true);

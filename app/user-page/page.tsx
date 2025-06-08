@@ -25,7 +25,7 @@ export default function UserPage() {
         .from("trips")
         .select()
         .order("created_at", { ascending: false })
-        .eq("email", email); // safety net. not necessary since RLS already restricts, but just in case
+        .eq("email", email); // safety net
 
       if (data && data.length > 0) {
         console.log("data from fetch", data);
@@ -52,6 +52,10 @@ export default function UserPage() {
     router.push("/");
   };
 
+  const goToTripDetails = (tripId: number) => {
+    router.push(`/trip-details?saved=${tripId}`);
+  };
+
   return (
     <div className="p-4">
       User Account Page
@@ -73,7 +77,9 @@ export default function UserPage() {
           allTrips &&
           allTrips.map((trip, index) => (
             <div key={index}>
-              <TripCard trip={trip} />
+              <div onClick={() => goToTripDetails(trip.id as number)}>
+                <TripCard trip={trip} />
+              </div>
               <button // button to delete a trip
                 className="btn-primary"
                 onClick={() => handleDelete(trip.id as number)}

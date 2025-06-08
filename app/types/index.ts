@@ -16,7 +16,7 @@ export interface LocationInputProps {
 
 export interface TripInfoType {
   location?: PlaceAutocompleteResult;
-  days?: number;
+  days?: number | null;
   people?: string;
   budget?: string;
   photo?: string | null;

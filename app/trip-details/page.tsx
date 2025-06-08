@@ -7,8 +7,9 @@ import { PlaceCard } from "../components/view-trip/PlaceCard";
 import { Trip, TripPlan0, TripPlan1 } from "../types";
 import { Auth } from "../components/auth";
 import { tripStorage } from "@/lib/trip-storage";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "../context/SessionContext";
+import { Suspense } from "react";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -18,23 +19,50 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 export default function TripDetails() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TripDetailsContent />
+    </Suspense>
+  );
+}
+
+function TripDetailsContent() {
+  const searchParams = useSearchParams();
+  const savedTripId = searchParams.get("saved");
+
   const session = useSession();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const router = useRouter();
 
-  // Fetch local stored trip
   useEffect(() => {
-    const localStoredTrip = tripStorage.getTrip();
-    if (localStoredTrip) {
-      const parsedTrip = {
-        ...localStoredTrip,
-        plan: JSON.parse(localStoredTrip.plan),
+    if (savedTripId) {
+      // Fetch from Supabase
+      const fetchSavedTrip = async () => {
+        const { data, error } = await supabase
+          .from("trips")
+          .select()
+          .eq("id", savedTripId)
+          .single();
+
+        if (data) {
+          setTrip(data);
+          setIsSaved(true);
+        }
       };
-      setTrip(parsedTrip);
-      console.log(parsedTrip);
+      fetchSavedTrip();
+    } else {
+      // Fetch from local storage
+      const localStoredTrip = tripStorage.getTrip();
+      if (localStoredTrip) {
+        const parsedTrip = {
+          ...localStoredTrip,
+          plan: JSON.parse(localStoredTrip.plan),
+        };
+        setTrip(parsedTrip);
+      }
     }
-  }, []);
+  }, [savedTripId]);
 
   // Allow user to save the trip to supabase once they're signed in
   const handleSaveTrip = async () => {
