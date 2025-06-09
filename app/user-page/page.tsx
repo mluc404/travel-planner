@@ -61,14 +61,14 @@ export default function UserPage() {
   return (
     <div className="flex justify-center w-full pb-8">
       <div className="p-4 px-6 flex flex-col w-full">
-        {/* <div className="flex gap-4">
-            <div>{session?.user.email}</div>
-            {session && (
-              <button className="btn-primary" onClick={() => handleSignOut()}>
-                Sign Out
-              </button>
-            )}
-          </div> */}
+        <div className="flex gap-4">
+          {/* <div>{session?.user.email}</div> */}
+          {/* {session && (
+            <button className="btn-primary" onClick={() => handleSignOut()}>
+              Sign Out
+            </button>
+          )} */}
+        </div>
         {/* <div>
             <Link href="/create-trip">
               <button className="btn-primary">Create Trip</button>
@@ -76,7 +76,7 @@ export default function UserPage() {
           </div> */}
         {/* show Loading state */}
         <h1 className="font-semibold text-2xl mb-6">My Trips</h1>
-        {isLoading && <div> Loading... </div>}
+        {session && isLoading && <div> Loading... </div>}
         {/* Display all trips */}
         <div className="flex flex-wrap gap-8 justify-center">
           {session &&

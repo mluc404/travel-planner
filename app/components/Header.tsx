@@ -4,16 +4,41 @@ import Link from "next/link";
 import { useSession } from "../context/SessionContext";
 import { Auth } from "./auth";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function Header() {
   const session = useSession();
   const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
   const pathName = usePathname();
+  const router = useRouter();
 
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const goToMyTrips = () => {
+    setAnchorEl(null);
+    router.push("/user-page");
+  };
+
+  const handleSignOut = async () => {
+    // setAnchorEl(null);
+    await supabase.auth.signOut();
+    router.push("/");
+  };
   return (
     <div
-      className="p-2 sm:px-4 flex justify-between items-center 
+      className="p-2 pr-4 flex justify-between items-center 
     bg-[#15191d] "
     >
       <Link href="/">
@@ -29,11 +54,32 @@ export default function Header() {
               className="btn-primary"
               onClick={() => {
                 setIsSignInOpen(!isSignInOpen);
-                console.log(pathName);
               }}
             >
               Sign in
             </button>
+            {/* <Button
+              // id="basic-button"
+              variant="outlined"
+              // variant="text"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={() => {
+                setIsSignInOpen(!isSignInOpen);
+                console.log(pathName);
+              }}
+              sx={{
+                color: "white",
+                fontSize: "1rem",
+                borderColor: "white",
+                backgroundColor: "",
+                textTransform: "none",
+                // padding: "5px 12px",
+              }}
+            >
+              Sign In
+            </Button> */}
           </div>
         )}
 
@@ -43,13 +89,52 @@ export default function Header() {
             redirectPath={pathName}
           />
         )}
-
-        {session && (
-          <Link href="/user-page">
-            <button className="btn-primary">Account</button>
-          </Link>
-        )}
       </div>
+
+      {/* New compact menu */}
+      {session && (
+        <div>
+          <Button
+            // id="basic-button"
+            variant="outlined"
+            // variant="text"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            sx={{
+              color: "white",
+              fontSize: "1rem",
+              borderColor: "white",
+              backgroundColor: "",
+              textTransform: "none",
+              // padding: "5px 12px",
+            }}
+          >
+            Account
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            slotProps={{
+              list: {
+                "aria-labelledby": "basic-button",
+              },
+              // paper: {
+              //   style: {
+              //     minWidth: anchorEl ? anchorEl.clientWidth : undefined,
+              //   },
+              // },
+            }}
+          >
+            <MenuItem onClick={handleClose}> Profile </MenuItem>
+            <MenuItem onClick={goToMyTrips}>My Trips</MenuItem>
+            <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+          </Menu>
+        </div>
+      )}
     </div>
   );
 }
