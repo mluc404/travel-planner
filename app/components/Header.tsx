@@ -32,8 +32,8 @@ export default function Header() {
   };
 
   const handleSignOut = async () => {
-    // setAnchorEl(null);
-    await supabase.auth.signOut();
+    handleClose();
+    await supabase.auth.signOut({ scope: "local" });
     router.push("/");
   };
   return (
@@ -50,25 +50,22 @@ export default function Header() {
       <div className="flex gap-4">
         {!session && (
           <div className="mt-auto">
-            <button
+            {/* <button
               className="btn-primary"
               onClick={() => {
                 setIsSignInOpen(!isSignInOpen);
               }}
             >
               Sign in
-            </button>
-            {/* <Button
+            </button> */}
+            <Button
               // id="basic-button"
               variant="outlined"
               // variant="text"
               aria-controls={open ? "basic-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
-              onClick={() => {
-                setIsSignInOpen(!isSignInOpen);
-                console.log(pathName);
-              }}
+              onClick={() => setIsSignInOpen(!isSignInOpen)}
               sx={{
                 color: "white",
                 fontSize: "1rem",
@@ -79,7 +76,7 @@ export default function Header() {
               }}
             >
               Sign In
-            </Button> */}
+            </Button>
           </div>
         )}
 
