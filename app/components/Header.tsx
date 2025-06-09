@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <div
-      className="p-2 flex justify-between items-center 
+      className="p-2 sm:px-4 flex justify-between items-center 
     bg-[#15191d] "
     >
       <Link href="/">

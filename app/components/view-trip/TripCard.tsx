@@ -2,28 +2,31 @@ import { Trip } from "@/app/types";
 import { TripPlan0 } from "@/app/types";
 import { LocationPhoto } from "../create-trip/LocationPhoto";
 
-export default function TripCard({ trip }: { trip: Trip }) {
+interface TripCardProps {
+  trip: Trip;
+  handleClick: () => void;
+}
+
+export default function TripCard({ trip, handleClick }: TripCardProps) {
   return (
-    <div>
-      <div
-        className="border-2 border-gray-400 w-full md:w-[50%] sm:h-[140px]
-    rounded-2xl p-2 grid grid-cols-[100px_1fr] sm:grid-cols-[120px_1fr]
-    items-center cursor-pointer hover:scale-105 hover:bg-gray-200
-    transition-all duration-300 ease-in-out"
-      >
-        <div className="relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px]">
-          <LocationPhoto
-            photoUrl={trip.main_photo}
-            selectedPlace={(trip.plan[0] as TripPlan0).destination}
-          />
+    <div
+      className=" flex flex-col 
+      cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
+      onClick={() => handleClick()}
+    >
+      <div className="relative w-full aspect-[3/2]">
+        <LocationPhoto
+          photoUrl={trip.main_photo}
+          selectedPlace={(trip.plan[0] as TripPlan0).destination}
+        />
+      </div>
+      <div className="">
+        <div className="font-semibold text-[1.1rem]">
+          {(trip.plan[0] as TripPlan0).trip_name}
         </div>
-        {/* px units are temporary */}
-        <div className="px-4 h-[100px] sm:h-[120px]">
-          <div className="font-semibold">
-            {(trip.plan[0] as TripPlan0).trip_name}
-          </div>
-          <div>{(trip.plan[0] as TripPlan0).duration}</div>
-          <div>{(trip.plan[0] as TripPlan0).travelers}</div>
+        <div>
+          <span>{(trip.plan[0] as TripPlan0).duration} - </span>
+          <span>{(trip.plan[0] as TripPlan0).travelers}</span>
         </div>
       </div>
     </div>

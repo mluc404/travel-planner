@@ -88,12 +88,12 @@ function TripDetailsContent() {
   const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-full min-w-[300px] px-4 pb-10 mt-8 sm:px-20 flex flex-col items-center">
+    <div className="w-full min-w-[300px] px-3 pb-10 mt-8 sm:px-20 flex flex-col items-center">
       <div className="w-full md:w-[70%] flex flex-col gap-4 sm:gap-10 justify-center items-center">
         {/* Display main photo */}
         {trip && (
           // <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
-          <div className="flex flex-col gap-2 w-full ">
+          <div className="flex flex-col gap-2 w-full">
             <div className="relative w-full h-[50vw] sm:h-[30vw]">
               <LocationPhoto
                 photoUrl={trip.main_photo}
@@ -117,6 +117,14 @@ function TripDetailsContent() {
                 </div>
               )}
             </div>
+            <div className="flex gap-4">
+              <div className="bg-gray-500 px-2 rounded-xl">
+                {(trip.plan[0] as TripPlan0).duration}
+              </div>
+              <div className="bg-gray-500 px-2 rounded-xl">
+                {(trip.plan[0] as TripPlan0).travelers}
+              </div>
+            </div>
           </div>
         )}
 
@@ -127,24 +135,26 @@ function TripDetailsContent() {
               <div key={index} className="w-full sm:w-[80%]">
                 <Accordion
                   defaultExpanded={index === 0}
-                  sx={{ backgroundColor: "white" }}
+                  // sx={{ backgroundColor: "white" }}
+                  sx={{ backgroundColor: "#202327" }}
                 >
                   <AccordionSummary
-                    expandIcon={<ArrowDownwardIcon />}
+                    expandIcon={<ArrowDownwardIcon className="text-white" />}
                     aria-controls="panel1-content"
                     id="panel1-header"
                   >
-                    <div className="font-semibold text-gray-700 text-[1.05rem]">
+                    <div className="font-semibold text-white text-[1.05rem]">
                       Day {day.day}: {day.day_theme}
                     </div>
                   </AccordionSummary>
                   <AccordionDetails
                     sx={{
                       padding: 1,
+                      paddingBottom: 2,
                       "@media (min-width: 600px)": { padding: 2 },
                     }}
-                    // className="flex flex-col gap-2 bg-[#2e3339]"
-                    className="flex flex-col gap-2 bg-[#2e3339] text-white"
+                    className="flex flex-col gap-2 text-white "
+                    // className="flex flex-col gap-2 bg-[#2e3339] text-white"
                   >
                     {day.places.map((place, index) => (
                       <PlaceCard

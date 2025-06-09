@@ -12,7 +12,7 @@ export function PlaceCard({ place, photo }: PlaceCardProps) {
     <div
       className="border-2 border-gray-400 w-full sm:h-[140px] 
     rounded-2xl p-2 grid grid-cols-[100px_1fr] sm:grid-cols-[120px_1fr]
-    items-center cursor-pointer hover:scale-105 hover:bg-gray-200
+    items-center cursor-pointer hover:scale-105 hover:bg-gray-700
     transition-all duration-300 ease-in-out"
     >
       <div className="relative w-[100px] sm:w-[120px] h-[100px] sm:h-[120px]">

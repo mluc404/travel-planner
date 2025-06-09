@@ -11,6 +11,7 @@ import TripCard from "../components/view-trip/TripCard";
 export default function UserPage() {
   const session = useSession();
   const [allTrips, setAllTrips] = useState<Trip[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function UserPage() {
       if (data && data.length > 0) {
         console.log("data from fetch", data);
         setAllTrips(data);
+        setIsLoading(false);
       } else {
         console.log("data is null");
         setAllTrips(null);
@@ -57,37 +59,46 @@ export default function UserPage() {
   };
 
   return (
-    <div className="p-4">
-      User Account Page
-      <div className="flex gap-4">
-        <div>User: {session?.user.email}</div>
-        {session && (
-          <button className="btn-primary" onClick={() => handleSignOut()}>
-            Sign Out
-          </button>
-        )}
-      </div>
-      <div>
-        <Link href="/create-trip">
-          <button className="btn-primary">Create Trip</button>
-        </Link>
-      </div>
-      <div className="flex flex-col gap-4">
-        {session &&
-          allTrips &&
-          allTrips.map((trip, index) => (
-            <div key={index}>
-              <div onClick={() => goToTripDetails(trip.id as number)}>
-                <TripCard trip={trip} />
-              </div>
-              <button // button to delete a trip
-                className="btn-primary"
-                onClick={() => handleDelete(trip.id as number)}
-              >
-                Delete
+    <div className="flex justify-center w-full pb-8">
+      <div className="p-4 px-6 flex flex-col w-full">
+        {/* <div className="flex gap-4">
+            <div>{session?.user.email}</div>
+            {session && (
+              <button className="btn-primary" onClick={() => handleSignOut()}>
+                Sign Out
               </button>
-            </div>
-          ))}
+            )}
+          </div> */}
+        {/* <div>
+            <Link href="/create-trip">
+              <button className="btn-primary">Create Trip</button>
+            </Link>
+          </div> */}
+        {/* show Loading state */}
+        <h1 className="font-semibold text-2xl mb-6">My Trips</h1>
+        {isLoading && <div> Loading... </div>}
+        {/* Display all trips */}
+        <div className="flex flex-wrap gap-8 justify-center">
+          {session &&
+            allTrips &&
+            allTrips.map((trip, index) => (
+              <div
+                key={index}
+                className="w-full sm:w-[45%] md:w-[30%] lg:w-[25%]"
+              >
+                <TripCard
+                  trip={trip}
+                  handleClick={() => goToTripDetails(trip.id as number)}
+                />
+                {/* <button
+                    className="btn-primary"
+                    onClick={() => handleDelete(trip.id as number)}
+                  >
+                    Delete
+                  </button> */}
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
