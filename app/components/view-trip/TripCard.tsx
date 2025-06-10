@@ -41,8 +41,8 @@ export default function TripCard({
           </div>
           <div>
             <button
-              //   className="btn-primary"
-              className="bg-gray-500 rounded px-2 hover:cursor-pointer"
+              className="bg-gray-500 rounded px-2 hover:cursor-pointer
+              hover:bg-gray-200 hover:text-gray-700"
               onClick={(e) => {
                 e.stopPropagation();
                 removeTrip(e);

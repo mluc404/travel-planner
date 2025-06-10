@@ -17,6 +17,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 
 export default function TripDetails() {
   return (
@@ -104,7 +105,7 @@ function TripDetailsContent() {
               <div className="font-semibold text-2xl">
                 {(trip.plan[0] as TripPlan0).trip_name}
               </div>
-              {session && (
+              {/* {session && (
                 <div>
                   {!isSaved && (
                     <button
@@ -115,15 +116,30 @@ function TripDetailsContent() {
                     </button>
                   )}
                 </div>
-              )}
+              )} */}
             </div>
-            <div className="flex gap-4">
-              <div className="bg-gray-500 px-2 rounded-xl">
-                {(trip.plan[0] as TripPlan0).duration}
+            <div className="flex justify-between">
+              <div className="flex gap-4 items-center">
+                <div className="bg-gray-500 px-2 rounded-xl">
+                  {(trip.plan[0] as TripPlan0).duration}
+                </div>
+                <div className="bg-gray-500 px-2 rounded-xl">
+                  {(trip.plan[0] as TripPlan0).travelers}
+                </div>
               </div>
-              <div className="bg-gray-500 px-2 rounded-xl">
-                {(trip.plan[0] as TripPlan0).travelers}
-              </div>
+              {session && (
+                <div>
+                  {!isSaved && (
+                    <button
+                      className="btn-second ml-4 text-[1rem]"
+                      onClick={() => handleSaveTrip()}
+                    >
+                      {/* Save Trip */}
+                      <BookmarkAddIcon />
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
