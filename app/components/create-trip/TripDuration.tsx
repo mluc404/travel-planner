@@ -8,7 +8,12 @@ interface TripDurationProps {
 export function TripDuration({ dates, setDates }: TripDurationProps) {
   return (
     <div className="flex flex-col gap-2 ">
-      <h2 className="text-xl font-semibold">How long is your trip</h2>
+      <div>
+        <h2 className="text-xl font-semibold">When are you going?</h2>
+        <p className="text-gray-400 text-md">
+          We curently support trips up to 5 days
+        </p>
+      </div>
       <Calendar
         value={dates}
         onChange={(e) => {

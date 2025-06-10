@@ -74,6 +74,9 @@ export default function CreateTrip() {
 
   // Function to generate trip
   const handleGenerateTrip = async () => {
+    if (tripInfo.days && tripInfo.days > 5) {
+      alert("Please select trip duration 5 days or less");
+    }
     if (tripInfo.days === 0) {
       alert("Please select an end date");
       return;
@@ -147,7 +150,7 @@ export default function CreateTrip() {
   return (
     <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-60 xl:px-80">
       <h1 className="font-bold text-3xl">Trip Information</h1>
-      <p className="text-gray-500 text-lg mt-2">
+      <p className="text-gray-200 text-lg mt-2">
         Enter your trip information and we will generate a customized itinerary
       </p>
       <div className="mt-2 sm:mt-8">
@@ -170,7 +173,7 @@ export default function CreateTrip() {
             <button className="btn-primary" onClick={handleGenerateTrip}>
               Generate Trip
             </button>
-            <div>Trips longer than 3 days require extra time</div>
+            {/* <div>Trips longer than 3 days require extra time</div> */}
             {isLoading && (
               // will use animated graphics
               <div>Loading...</div>

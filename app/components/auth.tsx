@@ -50,6 +50,7 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
         router.push("/user-page");
       }
     }
+    onClose();
   };
   return (
     <div
@@ -80,7 +81,6 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
 
         <Form action={""} className="flex flex-col gap-2 w-full">
           <div>
-            {/* <div>Email</div> */}
             <input
               type="email"
               className="input-primary"
@@ -91,7 +91,6 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
           </div>
 
           <div>
-            {/* <div>Password</div> */}
             <input
               type="password"
               className="input-primary"
