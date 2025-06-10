@@ -26,6 +26,10 @@ export default function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const goToProfile = () => {
+    setAnchorEl(null);
+    router.push("/profile");
+  };
   const goToMyTrips = () => {
     setAnchorEl(null);
     router.push("/user-page");
@@ -126,7 +130,7 @@ export default function Header() {
               // },
             }}
           >
-            <MenuItem onClick={handleClose}> Profile </MenuItem>
+            <MenuItem onClick={goToProfile}> Profile </MenuItem>
             <MenuItem onClick={goToMyTrips}>My Trips</MenuItem>
             <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
           </Menu>

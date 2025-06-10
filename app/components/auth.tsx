@@ -13,6 +13,7 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
+  const [signUpClicked, setSignUpClicked] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     if (!hasAccount) {
@@ -33,6 +34,8 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
       if (error) {
         console.error("Error signing up" + error.message);
         return;
+      } else {
+        setSignUpClicked(true);
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({
@@ -49,8 +52,8 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
       if (redirectPath === "/") {
         router.push("/user-page");
       }
+      onClose();
     }
-    onClose();
   };
   return (
     <div
@@ -78,48 +81,51 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
             </div>
           )}
         </div>
+        {signUpClicked ? (
+          <div>Please check your email</div>
+        ) : (
+          <Form action={""} className="flex flex-col gap-2 w-full">
+            <div>
+              <input
+                type="email"
+                className="input-primary"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-        <Form action={""} className="flex flex-col gap-2 w-full">
-          <div>
-            <input
-              type="email"
-              className="input-primary"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+            <div>
+              <input
+                type="password"
+                className="input-primary"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-          <div>
-            <input
-              type="password"
-              className="input-primary"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <button className="btn-primary mt-2" onClick={handleSubmit}>
-            {hasAccount ? "Sign in" : " Sign up"}
-          </button>
-          <div
-            className="cursor-pointer mt-2 text-center"
-            onClick={() => setHasAccount(!hasAccount)}
-          >
-            {hasAccount ? (
-              <>
-                Don&apos;t have an account?{" "}
-                <span className="underline">Sign up</span>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <span className="underline">Sign in</span>
-              </>
-            )}
-          </div>
-        </Form>
+            <button className="btn-primary mt-2" onClick={handleSubmit}>
+              {hasAccount ? "Sign in" : " Sign up"}
+            </button>
+            <div
+              className="cursor-pointer mt-2 text-center"
+              onClick={() => setHasAccount(!hasAccount)}
+            >
+              {hasAccount ? (
+                <>
+                  Don&apos;t have an account?{" "}
+                  <span className="underline">Sign up</span>
+                </>
+              ) : (
+                <>
+                  Already have an account?{" "}
+                  <span className="underline">Sign in</span>
+                </>
+              )}
+            </div>
+          </Form>
+        )}
       </div>
     </div>
   );

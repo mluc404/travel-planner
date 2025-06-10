@@ -7,6 +7,7 @@ import { useSession } from "../context/SessionContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import TripCard from "../components/view-trip/TripCard";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function UserPage() {
   const session = useSession();
@@ -78,6 +79,19 @@ export default function UserPage() {
         {/* show Loading state */}
         <h1 className="font-semibold text-2xl mb-6">My Trips</h1>
         {session && isLoading && <div> Loading... </div>}
+        {!allTrips && !isLoading && (
+          <div className="flex flex-col items-start gap-4">
+            <div>No trip found</div>
+            <button
+              className="btn-second text-[1rem]"
+              onClick={() => {
+                router.push("/create-trip");
+              }}
+            >
+              <AddIcon fontSize="large" />
+            </button>
+          </div>
+        )}
         {/* Display all trips */}
         <div className="flex flex-wrap gap-8 justify-center">
           {session &&

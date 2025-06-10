@@ -1,4 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
+import backupBG from "@/public/backupBG.svg";
+
 export default function Hero() {
   return (
     <div className="flex flex-col justify-center items-center gap-4 px-4">
@@ -12,6 +15,12 @@ export default function Hero() {
       <Link href="/create-trip">
         <button className="btn-primary">Get Started</button>
       </Link>
+      {/* <Image
+        src={backupBG}
+        alt="backgroud image"
+        width="500"
+        height="200"
+      ></Image> */}
     </div>
   );
 }
