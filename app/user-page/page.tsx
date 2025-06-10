@@ -35,6 +35,7 @@ export default function UserPage() {
       } else {
         console.log("data is null");
         setAllTrips(null);
+        setIsLoading(false);
       }
       if (error) {
         console.error("Error fetching trips");
@@ -89,13 +90,14 @@ export default function UserPage() {
                 <TripCard
                   trip={trip}
                   handleClick={() => goToTripDetails(trip.id as number)}
+                  removeTrip={() => handleDelete(trip.id as number)}
                 />
                 {/* <button
-                    className="btn-primary"
-                    onClick={() => handleDelete(trip.id as number)}
-                  >
-                    Delete
-                  </button> */}
+                  className="btn-primary"
+                  onClick={() => handleDelete(trip.id as number)}
+                >
+                  Delete
+                </button> */}
               </div>
             ))}
         </div>

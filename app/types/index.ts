@@ -32,7 +32,7 @@ export interface TripPlan0 {
   trip_name: string;
   destination: string;
   duration: string;
-  travelers: number;
+  travelers: number | string;
   place_list: string[];
 }
 
