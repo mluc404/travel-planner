@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabase";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Header() {
   const session = useSession();
@@ -52,10 +53,42 @@ export default function Header() {
           <h1 className="text-xl font-bold">Roamio</h1>
         </div>
       </Link>
-      <div className="flex gap-4">
+      <div className="flex gap-2">
+        {/* <Button
+          variant="outlined"
+          size="small"
+          sx={{
+            borderColor: "white",
+            padding: "0px",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.1)",
+              borderColor: "white",
+              // Optional: add transition for smooth effect
+              transition: "all 0.2s ease-in-out",
+            },
+          }}
+        > */}
+        {/* <div className="border-1 border-white flex justify-center items-center rounded px-2"> */}
+        <div className="btn-header" onClick={() => router.push("/create-trip")}>
+          <AddIcon
+            sx={{
+              // color: "white",
+              fontSize: "1.2rem",
+              padding: "0px",
+            }}
+          />
+        </div>
+        {/* </Button> */}
+
         {!session && (
           <div className="mt-auto">
-            <Button
+            <div
+              className="btn-header"
+              onClick={() => setIsSignInOpen(!isSignInOpen)}
+            >
+              Sign In
+            </div>
+            {/* <Button
               // id="basic-button"
               variant="outlined"
               // variant="text"
@@ -73,7 +106,7 @@ export default function Header() {
               }}
             >
               Sign In
-            </Button>
+            </Button> */}
           </div>
         )}
 
@@ -83,52 +116,52 @@ export default function Header() {
             redirectPath={pathName}
           />
         )}
-      </div>
 
-      {/* New compact menu */}
-      {session && (
-        <div>
-          <Button
-            // id="basic-button"
-            variant="outlined"
-            // variant="text"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            sx={{
-              color: "white",
-              fontSize: "1rem",
-              borderColor: "white",
-              backgroundColor: "",
-              textTransform: "none",
-              // padding: "5px 12px",
-            }}
-          >
-            Account
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            slotProps={{
-              list: {
-                "aria-labelledby": "basic-button",
-              },
-              // paper: {
-              //   style: {
-              //     minWidth: anchorEl ? anchorEl.clientWidth : undefined,
-              //   },
-              // },
-            }}
-          >
-            <MenuItem onClick={goToProfile}> Profile </MenuItem>
-            <MenuItem onClick={goToMyTrips}>My Trips</MenuItem>
-            <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
-          </Menu>
-        </div>
-      )}
+        {/* New compact menu */}
+        {session && (
+          <div>
+            <Button
+              // id="basic-button"
+              variant="outlined"
+              // variant="text"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+              sx={{
+                color: "white",
+                fontSize: "1rem",
+                borderColor: "white",
+                backgroundColor: "",
+                textTransform: "none",
+                // padding: "5px 12px",
+              }}
+            >
+              Account
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              slotProps={{
+                list: {
+                  "aria-labelledby": "basic-button",
+                },
+                // paper: {
+                //   style: {
+                //     minWidth: anchorEl ? anchorEl.clientWidth : undefined,
+                //   },
+                // },
+              }}
+            >
+              <MenuItem onClick={goToProfile}> Profile </MenuItem>
+              <MenuItem onClick={goToMyTrips}>My Trips</MenuItem>
+              <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+            </Menu>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

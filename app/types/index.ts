@@ -26,6 +26,7 @@ export interface PlaceInDayType {
   place_name: string;
   activity: string;
   time_to_spend: string;
+  cost?: string;
 }
 
 export interface TripPlan0 {
