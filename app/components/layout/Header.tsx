@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "../context/SessionContext";
-import { Auth } from "./auth";
+import { useSession } from "@/app/context/SessionContext";
+import { Auth } from "@/app/auth/Auth";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -32,7 +32,8 @@ export default function Header() {
   };
   const goToMyTrips = () => {
     setAnchorEl(null);
-    router.push("/user-page");
+    router.push("/trips");
+    // router.push("/user-page");
   };
 
   const handleSignOut = async () => {
@@ -54,14 +55,6 @@ export default function Header() {
       <div className="flex gap-4">
         {!session && (
           <div className="mt-auto">
-            {/* <button
-              className="btn-primary"
-              onClick={() => {
-                setIsSignInOpen(!isSignInOpen);
-              }}
-            >
-              Sign in
-            </button> */}
             <Button
               // id="basic-button"
               variant="outlined"

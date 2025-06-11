@@ -26,8 +26,8 @@ export default function AuthCallBack() {
         if (event === "SIGNED_IN") {
           // redirect users based on where they clicked sign up
           const redirectPath = localStorage.getItem("authRedirectPath") || "/";
-          localStorage.removeItem("authRedirectPath");
           router.push(redirectPath);
+          localStorage.removeItem("authRedirectPath");
         }
       }
     );

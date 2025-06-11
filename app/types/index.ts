@@ -61,4 +61,5 @@ export interface Trip {
   plan: [TripPlan0, ...TripPlan1[]] | string;
   main_photo: string | null;
   place_photos: { [key: string]: string | null };
+  isSaved?: boolean;
 }

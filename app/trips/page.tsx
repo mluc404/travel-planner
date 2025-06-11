@@ -9,7 +9,7 @@ import Link from "next/link";
 import TripCard from "../components/view-trip/TripCard";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function UserPage() {
+export default function AllTrips() {
   const session = useSession();
   const [allTrips, setAllTrips] = useState<Trip[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -57,7 +57,8 @@ export default function UserPage() {
   };
 
   const goToTripDetails = (tripId: number) => {
-    router.push(`/trip-details?saved=${tripId}`);
+    router.push(`/trips/${tripId}`);
+    // router.push(`/trip-details?saved=${tripId}`);
   };
 
   return (

@@ -11,11 +11,11 @@ import { TripDuration } from "../components/create-trip/TripDuration";
 import { TripBudget } from "../components/create-trip/TripBudget";
 
 import { API_PROMPT } from "../constants/options";
-import { generateTrip } from "../service/AiModal";
+import { generateTrip } from "../../lib/AiModal";
 
 import { useRouter } from "next/navigation";
 
-import { getPlaceFromText } from "../components/FindPlaceFromText";
+import { getPlaceFromText } from "../api/places/FindPlaceFromText";
 import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
 
 import { tripStorage } from "@/lib/trip-storage";
@@ -132,16 +132,19 @@ export default function CreateTrip() {
         // Save pending trip to local storage
         const pendingTrip: Trip = {
           destination_details: tripInfo.location,
-          plan: response,
+          plan: responseJson,
+          // plan: response,
           main_photo: tripInfo.photo ?? null,
           place_photos: place_photos_obj,
+          isSaved: false,
         };
         tripStorage.saveTrip(pendingTrip);
         const localStoredTrip = tripStorage.getTrip();
         console.log("Local Stored Trip", localStoredTrip);
 
         // Navigate to the trip page
-        router.push("/trip-details");
+        // router.push("/trip-details");
+        router.push("/trips/temp");
         setIsLoading(false);
       }
     }

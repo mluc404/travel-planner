@@ -50,7 +50,7 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
       // If sign in is successful and user is on home page, redirect to user account page
       // Doing this improves UX
       if (redirectPath === "/") {
-        router.push("/user-page");
+        router.push("/trips");
       }
       onClose();
     }
