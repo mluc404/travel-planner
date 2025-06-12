@@ -11,7 +11,7 @@ export default function HotelCard({ place, photo }: PlaceCardProps) {
   const clickPlaceCard = () => {
     window.open(
       `https://www.google.com/search?q=${encodeURIComponent(
-        ((place.hotel_name as string) + place.hotel_address) as string
+        ((place.hotel_name as string) + " " + place.hotel_address) as string
       )}`,
       "_blank"
     );

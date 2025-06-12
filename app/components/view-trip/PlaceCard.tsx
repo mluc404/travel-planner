@@ -4,13 +4,16 @@ import backupBG from "@/public/backupBG.svg";
 
 interface PlaceCardProps {
   place: PlaceInDayType;
+  destination: string;
   photo: string | null;
 }
 
-export function PlaceCard({ place, photo }: PlaceCardProps) {
+export function PlaceCard({ place, destination, photo }: PlaceCardProps) {
   const clickPlaceCard = () => {
     window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(place.place_name)}`,
+      `https://www.google.com/search?q=${encodeURIComponent(
+        place.place_name + " in " + destination
+      )}`,
       "_blank"
     );
   };

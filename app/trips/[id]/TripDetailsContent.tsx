@@ -161,6 +161,7 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
                       <PlaceCard
                         key={index}
                         place={place}
+                        destination={trip.destination_details.description}
                         photo={trip.place_photos[place.place_name]}
                       />
                       // </div>
