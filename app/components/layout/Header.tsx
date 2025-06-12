@@ -54,41 +54,45 @@ export default function Header() {
         </div>
       </Link>
       <div className="flex gap-2">
-        {/* <Button
+        <Button
           variant="outlined"
           size="small"
           sx={{
+            minWidth: "auto",
+            width: "3rem",
+            color: "white",
+            fontSize: "1rem",
             borderColor: "white",
-            padding: "0px",
+            backgroundColor: "",
+            textTransform: "none",
+            padding: "0",
             "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              borderColor: "white",
-              // Optional: add transition for smooth effect
-              transition: "all 0.2s ease-in-out",
+              backgroundColor: "#99a1af",
+              color: "black",
+              borderColor: "black",
             },
           }}
-        > */}
-        {/* <div className="border-1 border-white flex justify-center items-center rounded px-2"> */}
-        <div className="btn-header" onClick={() => router.push("/create-trip")}>
+          onClick={() => router.push("/create-trip")}
+        >
+          {/* <div className="border-1 border-white flex justify-center items-center rounded px-2"> */}
+          {/* <div className="btn-header" onClick={() => router.push("/create-trip")}> */}
           <AddIcon
             sx={{
-              // color: "white",
-              fontSize: "1.2rem",
-              padding: "0px",
+              fontSize: "1.5rem",
             }}
           />
-        </div>
-        {/* </Button> */}
+          {/* </div> */}
+        </Button>
 
         {!session && (
           <div className="mt-auto">
-            <div
+            {/* <div
               className="btn-header"
               onClick={() => setIsSignInOpen(!isSignInOpen)}
             >
               Sign In
-            </div>
-            {/* <Button
+            </div> */}
+            <Button
               // id="basic-button"
               variant="outlined"
               // variant="text"
@@ -103,10 +107,15 @@ export default function Header() {
                 backgroundColor: "",
                 textTransform: "none",
                 // padding: "5px 12px",
+                "&:hover": {
+                  backgroundColor: "#99a1af",
+                  color: "black",
+                  borderColor: "black",
+                },
               }}
             >
               Sign In
-            </Button> */}
+            </Button>
           </div>
         )}
 
@@ -135,9 +144,16 @@ export default function Header() {
                 backgroundColor: "",
                 textTransform: "none",
                 // padding: "5px 12px",
+                "&:hover": {
+                  backgroundColor: "#99a1af",
+                  color: "black",
+                  borderColor: "black",
+                },
               }}
             >
+              {/* <div className="btn-header" onClick={handleClick}> */}
               Account
+              {/* </div> */}
             </Button>
             <Menu
               id="basic-menu"

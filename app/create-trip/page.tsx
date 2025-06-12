@@ -20,6 +20,7 @@ import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
 
 import { tripStorage } from "@/lib/trip-storage";
 import { Trip } from "../types";
+import Button from "@mui/material/Button";
 
 export default function CreateTrip() {
   // States for LocationInput
@@ -36,6 +37,9 @@ export default function CreateTrip() {
 
   // State to store Trip Info
   const [tripInfo, setTripInfo] = useState<TripInfoType>({});
+
+  // State for submmit button
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const updateTripInfo = (
     name: string,
@@ -86,6 +90,7 @@ export default function CreateTrip() {
       alert("Please fill in the trip details");
     } else {
       setIsLoading(true);
+      setIsSubmitted(true);
       const FINAL_PROMPT = API_PROMPT.replace(
         "{TripLocation}",
         tripInfo?.location?.description ?? ""
@@ -199,14 +204,33 @@ export default function CreateTrip() {
           <TripBudget updateTripInfo={updateTripInfo} />
 
           <div className="flex flex-col items-center gap-2 justify-center">
-            <button className="btn-primary" onClick={handleGenerateTrip}>
+            {/* <button className="btn-primary" onClick={handleGenerateTrip}>
               Generate Trip
-            </button>
+            </button> */}
+            <Button
+              loading={isSubmitted}
+              variant="outlined"
+              sx={{
+                color: "white", // font color
+                borderColor: "white", // border color
+                backgroundColor: "gray", // background color
+                textTransform: "none",
+                fontSize: "1rem",
+                fontWeight: "600",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  borderColor: "white",
+                },
+              }}
+              onClick={handleGenerateTrip}
+            >
+              Generate Trip
+            </Button>
             {/* <div>Trips longer than 3 days require extra time</div> */}
-            {isLoading && (
+            {/* {isLoading && (
               // will use animated graphics
               <div>Loading...</div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
