@@ -39,6 +39,7 @@ export interface TripPlan0 {
   destination: string;
   duration: string;
   travelers: number | string;
+  budget?: string;
   place_list: string[];
 }
 
@@ -67,5 +68,6 @@ export interface Trip {
   plan: [TripPlan0, HotelType[], ...TripPlan1[]] | string;
   main_photo: string | null;
   place_photos: { [key: string]: string | null };
+  hotel_photos: { [key: string]: string | null };
   isSaved?: boolean;
 }

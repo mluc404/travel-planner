@@ -104,6 +104,7 @@ export default function CreateTrip() {
       if (response) {
         const responseJson = JSON.parse(response);
         const place_list = responseJson[0].place_list;
+        const hotel_list = responseJson[0].hotel_list;
         const destination = responseJson[0].destination;
 
         // Get photos of the places in itinerary
@@ -129,13 +130,38 @@ export default function CreateTrip() {
           place_photos_obj[place.place_name] = place.photo;
         });
 
+        // Get photos of hotels in itinerary
+        const hotelPhotoPromises = hotel_list.map(
+          async (hotel_name: string) => {
+            const placeDetails = await getPlaceFromText(
+              `${hotel_name} in ${destination}`
+            );
+            if (placeDetails?.candidates?.[0]?.photos) {
+              const photoRef =
+                placeDetails.candidates[0].photos[0].photo_reference;
+              const photo = await getPlacePhotoSmall(photoRef);
+              return { hotel_name, photo };
+            } else {
+              console.log(`No photo found for ${hotel_name}`);
+              return { hotel_name, photo: null };
+            }
+          }
+        );
+        const fetchedHotelPhotos = await Promise.all(hotelPhotoPromises);
+
+        // create an obj hotels_photos to store the photos
+        const hotel_photos_obj: { [key: string]: string | null } = {};
+        fetchedHotelPhotos.map((hotel) => {
+          hotel_photos_obj[hotel.hotel_name] = hotel.photo;
+        });
+
         // Save pending trip to local storage
         const pendingTrip: Trip = {
           destination_details: tripInfo.location,
           plan: responseJson,
-          // plan: response,
           main_photo: tripInfo.photo ?? null,
           place_photos: place_photos_obj,
+          hotel_photos: hotel_photos_obj,
           isSaved: false,
         };
         tripStorage.saveTrip(pendingTrip);

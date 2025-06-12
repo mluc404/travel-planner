@@ -109,6 +109,9 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
                 <div className="bg-gray-500 px-2 rounded-xl">
                   {(trip.plan[0] as TripPlan0).travelers}
                 </div>
+                <div className="bg-gray-500 px-2 rounded-xl">
+                  $ {(trip.plan[0] as TripPlan0).budget}
+                </div>
               </div>
               {session && (
                 <div>
@@ -170,7 +173,10 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
           {/* Display Hotels */}
           {trip && (
             <div className="w-full sm:w-[80%]">
-              <Accordion defaultExpanded sx={{ backgroundColor: "#202327" }}>
+              <Accordion
+                defaultExpanded={false}
+                sx={{ backgroundColor: "#202327" }}
+              >
                 <AccordionSummary
                   expandIcon={<ArrowDownwardIcon className="text-white" />}
                   aria-controls="panel1-content"
@@ -189,7 +195,11 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
                   className="flex flex-col gap-2 text-white items-center "
                 >
                   {(trip.plan[1] as HotelType[]).map((hotel, index) => (
-                    <HotelCard key={index} place={hotel} />
+                    <HotelCard
+                      key={index}
+                      place={hotel}
+                      photo={trip.hotel_photos[hotel.hotel_name]}
+                    />
                   ))}
                 </AccordionDetails>
               </Accordion>

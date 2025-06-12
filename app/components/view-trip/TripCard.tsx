@@ -35,9 +35,11 @@ export default function TripCard({
             <span>{(trip.plan[0] as TripPlan0).duration} • </span>
             <span>
               {(trip.plan[0] as TripPlan0).travelers === "1 person"
-                ? "Solo"
-                : (trip.plan[0] as TripPlan0).travelers}
+                ? "Solo "
+                : (trip.plan[0] as TripPlan0).travelers}{" "}
+              •{" "}
             </span>
+            <span>${(trip.plan[0] as TripPlan0).budget} </span>
           </div>
           <div>
             <button
