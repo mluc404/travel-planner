@@ -1,5 +1,5 @@
 import Form from "next/form";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -12,35 +12,60 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
   const [hasAccount, setHasAccount] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [signinPassword, setSigninPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const router = useRouter();
   const [signUpClicked, setSignUpClicked] = useState<boolean>(false);
 
+  // Validate signup password
+  useEffect(() => {
+    if (!hasAccount) {
+      if (password.length < 6) {
+        setPasswordError("Password must be at least 6 characters");
+      } else {
+        if (password !== confirmPassword) {
+          setPasswordError("Passwords do not match");
+        } else {
+          setPasswordError(null);
+        }
+      }
+    }
+  }, [password, confirmPassword]);
+
+  // console.log(passwordError);
+
   const handleSubmit = async () => {
     if (!hasAccount) {
-      // Store the redirected path to redirect user after signing up
-      if (redirectPath) {
-        localStorage.setItem("authRedirectPath", redirectPath);
-      }
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo:
-            process.env.NODE_ENV === "production"
-              ? "https://travel-planner-nine-sage.vercel.app/auth/callback"
-              : `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) {
-        console.error("Error signing up" + error.message);
-        return;
+      // Check for password matching
+      if (passwordError) {
+        console.log(passwordError);
       } else {
-        setSignUpClicked(true);
+        // Store the redirected path to redirect user after signing up
+        if (redirectPath) {
+          localStorage.setItem("authRedirectPath", redirectPath);
+        }
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo:
+              process.env.NODE_ENV === "production"
+                ? "https://travel-planner-nine-sage.vercel.app/auth/callback"
+                : `${window.location.origin}/auth/callback`,
+          },
+        });
+        if (error) {
+          console.error("Error signing up" + error.message);
+          return;
+        } else {
+          setSignUpClicked(true);
+        }
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password: signinPassword,
       });
       if (error) {
         console.error("Error signing in" + error.message);
@@ -62,7 +87,7 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
       onClick={() => onClose()}
     >
       <div
-        className="fixed top-[20vh] z-99 w-[min(300px,80vw)] bg-white text-gray-800
+        className="fixed top-[20vh] z-99 w-[90%] sm:w-[min(50%,500px)]  bg-white text-gray-800
          flex flex-col gap-4 justify-between items-center p-4 px-6 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -82,7 +107,12 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
           )}
         </div>
         {signUpClicked ? (
-          <div>Please check your email</div>
+          <div className="">
+            Thank you for joining{" "}
+            <span className="font-semibold">Roamio! </span>
+            Please check your email for a confirmation link to start your
+            journey &#x2708;
+          </div>
         ) : (
           <Form action={""} className="flex flex-col gap-2 w-full">
             <div>
@@ -95,15 +125,40 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
               />
             </div>
 
-            <div>
-              <input
-                type="password"
-                className="input-primary"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            {hasAccount && (
+              <div>
+                <input
+                  type="password"
+                  className="input-primary"
+                  placeholder="Password"
+                  value={signinPassword}
+                  onChange={(e) => setSigninPassword(e.target.value)}
+                />
+              </div>
+            )}
+            {!hasAccount && (
+              <>
+                <div>
+                  <input
+                    type="password"
+                    className="input-primary"
+                    placeholder="Password at least 6 characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <input
+                    type="password"
+                    className="input-primary"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
+            {passwordError && <p className="text-red-500">{passwordError}</p>}
 
             <button className="btn-primary mt-2" onClick={handleSubmit}>
               {hasAccount ? "Sign in" : " Sign up"}
@@ -120,7 +175,16 @@ export function Auth({ onClose, redirectPath }: AuthProps) {
               ) : (
                 <>
                   Already have an account?{" "}
-                  <span className="underline">Sign in</span>
+                  <span
+                    className="underline"
+                    onClick={() => {
+                      setHasAccount(true);
+                      setPasswordError(null);
+                      console.log(passwordError);
+                    }}
+                  >
+                    Sign in
+                  </span>
                 </>
               )}
             </div>
