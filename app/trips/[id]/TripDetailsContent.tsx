@@ -4,11 +4,12 @@ import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { LocationPhoto } from "@/app/components/create-trip/LocationPhoto";
 import { PlaceCard } from "@/app/components/view-trip/PlaceCard";
-import { Trip, TripPlan0, TripPlan1 } from "@/app/types";
+import { HotelType, Trip, TripPlan0, TripPlan1 } from "@/app/types";
 import { Auth } from "@/app/auth/Auth";
 import { tripStorage } from "@/lib/trip-storage";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@/app/context/SessionContext";
+import HotelCard from "@/app/components/view-trip/HotelCard";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -51,6 +52,7 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
           //   };
           //   setTrip(parsedTrip);
           setTrip(localStoredTrip);
+          console.log(localStoredTrip);
         }
       }
     }
@@ -128,7 +130,7 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
         {/* Display Itinerary using Accordion */}
         <div className="w-full flex flex-wrap gap-4 sm:gap-8 justify-center ">
           {trip &&
-            (trip.plan.slice(1) as TripPlan1[]).map((day, index) => (
+            (trip.plan.slice(2) as TripPlan1[]).map((day, index) => (
               <div key={index} className="w-full sm:w-[80%]">
                 <Accordion
                   defaultExpanded={index === 0}
@@ -164,6 +166,40 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
                 </Accordion>
               </div>
             ))}
+
+          {/* Display Hotels */}
+          {trip && (
+            <div className="w-full sm:w-[80%]">
+              <Accordion defaultExpanded sx={{ backgroundColor: "#202327" }}>
+                <AccordionSummary
+                  expandIcon={<ArrowDownwardIcon className="text-white" />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <div className="font-semibold text-white text-[1.05rem]">
+                    Hotel Suggestions
+                  </div>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{
+                    padding: 1,
+                    paddingBottom: 2,
+                    "@media (min-width: 600px)": { padding: 2 },
+                  }}
+                  className="flex flex-col gap-2 text-white items-center "
+                >
+                  {(trip.plan[1] as HotelType[]).map((hotel, index) => (
+                    <HotelCard key={index} place={hotel} />
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            </div>
+          )}
+
+          {/* {trip && 
+            (trip.plan[1] as HotelType[]).map((hotel, index) => (
+              
+            ))} */}
         </div>
 
         {/* Button to SignIn */}

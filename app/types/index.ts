@@ -28,6 +28,11 @@ export interface PlaceInDayType {
   time_to_spend: string;
   cost?: string;
 }
+export interface HotelType {
+  hotel_name: string;
+  hotel_address?: string;
+  hotel_cost_per_night?: string;
+}
 
 export interface TripPlan0 {
   trip_name: string;
@@ -59,7 +64,7 @@ export interface Trip {
   created_at?: string;
   email?: string;
   destination_details: PlaceAutocompleteResult;
-  plan: [TripPlan0, ...TripPlan1[]] | string;
+  plan: [TripPlan0, HotelType[], ...TripPlan1[]] | string;
   main_photo: string | null;
   place_photos: { [key: string]: string | null };
   isSaved?: boolean;
