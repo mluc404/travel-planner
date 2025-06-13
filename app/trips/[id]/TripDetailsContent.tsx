@@ -134,7 +134,7 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
         <div className="w-full flex flex-wrap gap-4 sm:gap-8 justify-center ">
           {trip &&
             (trip.plan.slice(2) as TripPlan1[]).map((day, index) => (
-              <div key={index} className="w-full sm:w-[80%]">
+              <div key={index} className="w-full sm:w-[90%] lg:w-[80%]">
                 <Accordion
                   defaultExpanded={index === 0}
                   sx={{ backgroundColor: "#202327" }}

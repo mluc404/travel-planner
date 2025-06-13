@@ -78,16 +78,32 @@ export default function CreateTrip() {
 
   // Function to generate trip
   const handleGenerateTrip = async () => {
-    if (tripInfo.days && tripInfo.days > 5) {
-      alert("Please select trip duration 5 days or less");
+    if (tripInfo.days) {
+      if (tripInfo.days > 5) {
+        alert("Please select trip duration 5 days or less");
+        return;
+      } else if (tripInfo.days === 0) {
+        alert("Please select an end date");
+        return;
+      }
     }
-    if (tripInfo.days === 0) {
-      alert("Please select an end date");
+
+    if (
+      tripInfo.budget?.split("").every((char) => char === "0") ||
+      parseFloat(tripInfo.budget ?? "0") <= 0
+    ) {
+      alert("Please set a budget");
       return;
     }
 
-    if (!tripInfo.location || !tripInfo.people || !tripInfo.budget) {
+    if (
+      !tripInfo.location ||
+      !tripInfo.people ||
+      !tripInfo.budget ||
+      !tripInfo.days
+    ) {
       alert("Please fill in the trip details");
+      return;
     } else {
       setIsLoading(true);
       setIsSubmitted(true);

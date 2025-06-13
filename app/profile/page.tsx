@@ -5,8 +5,7 @@ export default function UserPage() {
   const session = useSession();
   return (
     <div className="p-4">
-      <h1>Temporary User Profile page</h1>
-      <div>User: {session?.user.email}</div>
+      <div className="text-[1.2rem]">User: {session?.user.email}</div>
     </div>
   );
 }
