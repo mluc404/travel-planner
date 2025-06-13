@@ -6,13 +6,13 @@ export const travelParty = [
   },
   {
     id: 2,
-    title: "Us two",
+    title: "A Duo",
     value: "2 people",
   },
   {
     id: 3,
-    title: "Group",
-    value: "group",
+    title: "A Group",
+    value: "A Group",
   },
 ];
 

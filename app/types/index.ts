@@ -49,16 +49,6 @@ export interface TripPlan1 {
   places: PlaceInDayType[];
 }
 
-// export interface Trip {
-//   id: string;
-//   title: { description: string };
-//   plan: [TripPlan0, ...TripPlan1[]];
-//   created_at: string;
-//   main_photo: string;
-//   place_photos: { [key: string]: string };
-//   email?: string;
-// }
-
 export interface Trip {
   id?: number;
   user_id?: string;

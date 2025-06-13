@@ -9,9 +9,9 @@ export function TripDuration({ dates, setDates }: TripDurationProps) {
   return (
     <div className="flex flex-col gap-2 ">
       <div>
-        <h2 className="text-xl font-semibold">When are you going?</h2>
+        <h2 className="text-xl font-semibold">When’s Your Adventure?</h2>
         <p className="text-gray-400 text-md">
-          We curently support trips up to 5 days
+          We craft trips up to 5 days – pick your dates!
         </p>
       </div>
       <Calendar

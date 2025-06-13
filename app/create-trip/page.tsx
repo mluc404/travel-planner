@@ -199,9 +199,9 @@ export default function CreateTrip() {
 
   return (
     <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-60 xl:px-80">
-      <h1 className="font-bold text-3xl">Trip Information</h1>
-      <p className="text-gray-200 text-lg mt-2">
-        Enter your trip information and we will generate a customized itinerary
+      <h1 className="font-bold text-3xl">Craft Your Perfect Trip</h1>
+      <p className="text-gray-300 text-[1.1rem] mt-2">
+        Share a few details, and we&apos;ll craft a tailored itinerary for you!
       </p>
       <div className="mt-2 sm:mt-8">
         <div className="flex flex-col gap-4">
@@ -220,27 +220,28 @@ export default function CreateTrip() {
           <TripBudget updateTripInfo={updateTripInfo} />
 
           <div className="flex flex-col items-center gap-2 justify-center">
-            {/* <button className="btn-primary" onClick={handleGenerateTrip}>
-              Generate Trip
-            </button> */}
             <Button
               loading={isSubmitted}
               variant="outlined"
               sx={{
-                color: "white", // font color
-                borderColor: "white", // border color
-                backgroundColor: "gray", // background color
+                color: "white",
+                // borderColor: "white",
+                backgroundColor: "rgba(59, 130, 246, 0.5)",
                 textTransform: "none",
                 fontSize: "1rem",
                 fontWeight: "600",
                 "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  borderColor: "white",
+                  backgroundColor: "rgba(59, 130, 246, 0.8)",
+                  // borderColor: "white",
+                },
+                "& .MuiCircularProgress-root": {
+                  color: "white",
                 },
               }}
               onClick={handleGenerateTrip}
             >
-              Generate Trip
+              {/* Generate Trip */}
+              Launch My Adventure &#x2708;
             </Button>
             {/* <div>Trips longer than 3 days require extra time</div> */}
             {/* {isLoading && (

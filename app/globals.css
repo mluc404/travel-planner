@@ -17,6 +17,7 @@
     /* --background: #0a0a0a; */
     --background: #2e3339;
     --foreground: #ededed;
+    /* --foreground: #4db9dd; */
   }
 }
 
@@ -30,6 +31,14 @@ body {
   @apply px-3 py-2 rounded-[8px] bg-gray-800 text-white text-[1rem] font-semibold
   hover:bg-gray-400 hover:text-black transition-all duration-200 ease-in-out cursor-pointer;
 }
+/* .btn-primary {
+  @apply px-3 py-2 rounded-[8px] bg-[#427b8e] text-white text-[1rem] font-semibold
+  hover:bg-[#34616f] transition-all duration-200 ease-in-out cursor-pointer;
+} */
+.btn-primary-2 {
+  @apply px-3 py-2 rounded-[8px] bg-blue-500/50 text-white text-[1rem] font-semibold
+  hover:bg-blue-500/80 transition-all duration-200 ease-in-out cursor-pointer;
+}
 .btn-header {
   @apply px-3 py-1 rounded-[6px] bg-gray-800/0 border-1 text-white text-[1rem] 
   hover:bg-gray-400 hover:text-black transition-all duration-200 ease-in-out cursor-pointer;
@@ -41,8 +50,7 @@ body {
 
 .input-primary {
   @apply w-full p-2 text-[1rem] rounded
-  font-semibold text-gray-700 bg-gray-200
-  /* border-2 border-gray-500; */;
+  font-semibold text-gray-700 bg-gray-200;
 }
 
 /* Date Picker style */

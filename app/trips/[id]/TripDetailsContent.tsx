@@ -14,9 +14,7 @@ import HotelCard from "@/app/components/view-trip/HotelCard";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 
 export default function TripDetailsContent({ tripId }: { tripId: string }) {
@@ -46,11 +44,6 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
         // Fetch from local storage
         const localStoredTrip = tripStorage.getTrip();
         if (localStoredTrip) {
-          //   const parsedTrip = {
-          //     ...localStoredTrip,
-          //     plan: JSON.parse(localStoredTrip.plan),
-          //   };
-          //   setTrip(parsedTrip);
           setTrip(localStoredTrip);
           console.log(localStoredTrip);
         }
@@ -206,18 +199,13 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
               </Accordion>
             </div>
           )}
-
-          {/* {trip && 
-            (trip.plan[1] as HotelType[]).map((hotel, index) => (
-              
-            ))} */}
         </div>
 
         {/* Button to SignIn */}
         {!session && (
           <div className="mt-auto">
             <button
-              className="btn-primary"
+              className="btn-primary-2"
               onClick={() => setIsSignInOpen(!isSignInOpen)}
             >
               Sign in to save your trip

@@ -72,7 +72,7 @@ export function LocationInput({
   };
   return (
     <div className="flex flex-col gap-2 relative">
-      <h2 className="text-xl font-semibold">Where would you like to go?</h2>
+      <h2 className="text-xl font-semibold">Where’s Your Next Destination?</h2>
       <input
         type="text"
         value={inputPlace}
@@ -80,7 +80,7 @@ export function LocationInput({
           setInputPlace(e.target.value);
           setIsSelecting(true);
         }}
-        placeholder="Enter a city or a country"
+        placeholder="Enter a city or country to explore"
         className="input-primary"
       />
       {predictions.length > 0 && (
