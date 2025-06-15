@@ -3,24 +3,19 @@
 import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { LocationPhoto } from "@/app/components/create-trip/LocationPhoto";
-import { PlaceCard } from "@/app/components/view-trip/PlaceCard";
-import { HotelType, Trip, TripPlan0, TripPlan1 } from "@/app/types";
+import { Trip, TripPlan0, TripPlan1 } from "@/app/types";
 import { Auth } from "@/app/auth/Auth";
 import { tripStorage } from "@/lib/trip-storage";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/app/context/SessionContext";
-import HotelCard from "@/app/components/view-trip/HotelCard";
 
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import RecommendPlaces from "@/app/components/view-trip/RecommendPlaces";
+import RecommendHotels from "@/app/components/view-trip/RecommendHotels";
 
 export default function TripDetailsContent({ tripId }: { tripId: string }) {
   const session = useSession();
   const [trip, setTrip] = useState<Trip | null>(null);
-  const [isSaved, setIsSaved] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -36,7 +31,10 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
 
           if (data) {
             setTrip(data);
-            setIsSaved(true);
+          }
+
+          if (error) {
+            console.error("Error fetching trip: ", error);
           }
         };
         fetchSavedTrip();
@@ -64,14 +62,9 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
     if (error) {
       console.error("Error saving trip: ", error);
     } else {
-      setIsSaved(true);
-      //   tripStorage.clearTrip();
       tripStorage.saveTrip({ ...trip, isSaved: true } as Trip);
     }
-    // will think about if I need to clear local storage at this point
-    // after saving to supabse sucessfully, router.push to user account page?
     router.push("/trips");
-    // router.push("/user-page");
   };
 
   const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
@@ -81,7 +74,6 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
       <div className="w-full md:w-[70%] flex flex-col gap-4 sm:gap-10 justify-center items-center">
         {/* Display main photo */}
         {trip && (
-          // <div className="flex flex-col gap-2 w-full md:px-10 xl:px-40">
           <div className="flex flex-col gap-2 w-full">
             <div className="relative w-full h-[50vw] sm:h-[30vw]">
               <LocationPhoto
@@ -103,9 +95,11 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
                   {(trip.plan[0] as TripPlan0).travelers}
                 </div>
                 <div className="bg-gray-500 px-2 rounded-xl">
-                  $ {(trip.plan[0] as TripPlan0).budget}
+                  ${(trip.plan[0] as TripPlan0).budget}
                 </div>
               </div>
+
+              {/* Save Trip button */}
               {session && (
                 <div>
                   {!trip.isSaved && (
@@ -113,7 +107,6 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
                       className="btn-second ml-4 text-[1rem]"
                       onClick={() => handleSaveTrip()}
                     >
-                      {/* Save Trip */}
                       <BookmarkAddIcon />
                     </button>
                   )}
@@ -123,85 +116,24 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
           </div>
         )}
 
-        {/* Display Itinerary using Accordion */}
+        {/* Display Itinerary */}
         <div className="w-full flex flex-wrap gap-4 sm:gap-8 justify-center ">
           {trip &&
             (trip.plan.slice(2) as TripPlan1[]).map((day, index) => (
               <div key={index} className="w-full sm:w-[90%] lg:w-[80%]">
-                <Accordion
-                  defaultExpanded={index === 0}
-                  sx={{ backgroundColor: "#202327" }}
-                >
-                  <AccordionSummary
-                    expandIcon={<ArrowDownwardIcon className="text-white" />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                  >
-                    <div className="font-semibold text-white text-[1.05rem]">
-                      Day {day.day}: {day.day_theme}
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    sx={{
-                      padding: 1,
-                      paddingBottom: 2,
-                      "@media (min-width: 600px)": { padding: 2 },
-                    }}
-                    className="flex flex-col gap-2 text-white items-center "
-                  >
-                    {day.places.map((place, index) => (
-                      // <div className="sm:w-[90%]">
-                      <PlaceCard
-                        key={index}
-                        place={place}
-                        destination={trip.destination_details.description}
-                        photo={trip.place_photos[place.place_name]}
-                      />
-                      // </div>
-                    ))}
-                  </AccordionDetails>
-                </Accordion>
+                <RecommendPlaces day={day} index={index} trip={trip} />
               </div>
             ))}
 
           {/* Display Hotels */}
           {trip && (
             <div className="w-full sm:w-[80%]">
-              <Accordion
-                defaultExpanded={false}
-                sx={{ backgroundColor: "#202327" }}
-              >
-                <AccordionSummary
-                  expandIcon={<ArrowDownwardIcon className="text-white" />}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
-                >
-                  <div className="font-semibold text-white text-[1.05rem]">
-                    Hotel Suggestions
-                  </div>
-                </AccordionSummary>
-                <AccordionDetails
-                  sx={{
-                    padding: 1,
-                    paddingBottom: 2,
-                    "@media (min-width: 600px)": { padding: 2 },
-                  }}
-                  className="flex flex-col gap-2 text-white items-center "
-                >
-                  {(trip.plan[1] as HotelType[]).map((hotel, index) => (
-                    <HotelCard
-                      key={index}
-                      place={hotel}
-                      photo={trip.hotel_photos[hotel.hotel_name]}
-                    />
-                  ))}
-                </AccordionDetails>
-              </Accordion>
+              <RecommendHotels trip={trip} />
             </div>
           )}
         </div>
 
-        {/* Button to SignIn */}
+        {/* CTA SignIn to save trip */}
         {!session && (
           <div className="mt-auto">
             <button
@@ -212,7 +144,6 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
             </button>
           </div>
         )}
-
         {isSignInOpen && <Auth onClose={() => setIsSignInOpen(false)} />}
       </div>
     </div>

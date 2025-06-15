@@ -1,7 +1,7 @@
 import { Trip } from "@/app/types";
 import { TripPlan0 } from "@/app/types";
 import { LocationPhoto } from "../create-trip/LocationPhoto";
-import RemoveIcon from "@mui/icons-material/Remove";
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 
 interface TripCardProps {
   trip: Trip;
@@ -26,11 +26,11 @@ export default function TripCard({
           selectedPlace={(trip.plan[0] as TripPlan0).destination}
         />
       </div>
-      <div className="">
-        <div className="font-semibold text-[1.1rem]">
-          {(trip.plan[0] as TripPlan0).trip_name}
-        </div>
-        <div className="flex justify-between">
+      <div className="flex justify-between items-center">
+        <div>
+          <div className="font-semibold text-[1.1rem]">
+            {(trip.plan[0] as TripPlan0).trip_name}
+          </div>
           <div>
             <span>{(trip.plan[0] as TripPlan0).duration} • </span>
             <span>
@@ -41,18 +41,18 @@ export default function TripCard({
             </span>
             <span>${(trip.plan[0] as TripPlan0).budget} </span>
           </div>
-          <div>
-            <button
-              className="bg-gray-500 rounded px-2 hover:cursor-pointer
-              hover:bg-gray-200 hover:text-gray-700"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeTrip(e);
-              }}
-            >
-              <RemoveIcon />
-            </button>
-          </div>
+        </div>
+        <div className="">
+          <button
+            className="btn-second"
+            onClick={(e) => {
+              e.stopPropagation();
+              removeTrip(e);
+            }}
+          >
+            {/* <RemoveIcon /> */}
+            <BookmarkRemoveIcon />
+          </button>
         </div>
       </div>
     </div>

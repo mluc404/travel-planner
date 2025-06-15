@@ -1,19 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { callAutocomplete } from "../api/places/callAutocomplete";
 import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js";
 import debounce from "lodash.debounce";
 
-import { LocationInput } from "../components/create-trip/LocationInput";
 import { TripInfoType } from "../types";
+import { LocationInput } from "../components/create-trip/LocationInput";
 import { PeopleCount } from "../components/create-trip/PeopleCount";
 import { TripDuration } from "../components/create-trip/TripDuration";
 import { TripBudget } from "../components/create-trip/TripBudget";
 
 import { API_PROMPT } from "../constants/options";
 import { generateTrip } from "../../lib/AiModal";
-
-import { useRouter } from "next/navigation";
 
 import { getPlaceFromText } from "../api/places/FindPlaceFromText";
 import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
@@ -199,11 +199,14 @@ export default function CreateTrip() {
 
   return (
     <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-60 xl:px-80">
-      <h1 className="font-bold text-3xl">Craft Your Perfect Trip</h1>
+      {/* <h1 className="font-bold text-3xl">Craft Your Perfect Trip</h1> */}
+      <h1 className="font-bold text-3xl">Plan Your Next Getaway</h1>
+      {/* <h1 className="font-bold text-3xl">Plan Your Dream Getaway</h1> */}
       <p className="text-gray-300 text-[1.1rem] mt-2">
-        Share a few details, and we&apos;ll craft a tailored itinerary for you!
+        Share a few details, and we&apos;ll recommend travel spots and hotels
+        for you!
       </p>
-      <div className="mt-2 sm:mt-8">
+      <div className="mt-4 sm:mt-8">
         <div className="flex flex-col gap-4">
           <LocationInput
             inputPlace={inputPlace}
@@ -226,13 +229,12 @@ export default function CreateTrip() {
               sx={{
                 color: "white",
                 // borderColor: "white",
-                backgroundColor: "rgba(59, 130, 246, 0.5)",
+                backgroundColor: "rgba(59, 130, 246, 0.8)",
                 textTransform: "none",
                 fontSize: "1rem",
                 fontWeight: "600",
                 "&:hover": {
-                  backgroundColor: "rgba(59, 130, 246, 0.8)",
-                  // borderColor: "white",
+                  backgroundColor: "rgba(59, 130, 246, 1)",
                 },
                 "& .MuiCircularProgress-root": {
                   color: "white",

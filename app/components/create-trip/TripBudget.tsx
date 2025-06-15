@@ -9,7 +9,7 @@ export function TripBudget({ updateTripInfo }: TripBudgetProps) {
       <input
         type="number"
         className="input-primary"
-        placeholder="Enter your estimated trip budget in USD"
+        placeholder="Enter your hotel and activity budget (USD)"
         onChange={(e) => updateTripInfo("budget", e.target.value)}
       />
     </div>

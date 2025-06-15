@@ -27,6 +27,10 @@ export default function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const goToCreateTrip = () => {
+    setAnchorEl(null);
+    router.push("/create-trip");
+  };
   const goToProfile = () => {
     setAnchorEl(null);
     router.push("/profile");

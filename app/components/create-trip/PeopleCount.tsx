@@ -16,7 +16,7 @@ export function PeopleCount({ tripInfo, updateTripInfo }: PeopleCountProps) {
             key={index}
             className={`border-2 p-2 flex justify-center rounded cursor-pointer font-semibold hover:bg-gray-300 hover:text-black ${
               tripInfo.people === item.value &&
-              "bg-gray-200 text-black border-2 border-black"
+              "bg-gray-200 text-gray-700 border-2 border-gray-800"
             } `}
             onClick={() => updateTripInfo("people", item.value)}
           >

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Travel Planner",
+  title: "Roamio Travel Planner",
   description: "An Ai powered travel planner application",
 };
 
