@@ -185,7 +185,7 @@ export default function CreateTrip() {
   };
 
   return (
-    <div className="px-5 mt-4 sm:mt-8 sm:px-20 md:px-40 lg:px-60 xl:px-80">
+    <div className="px-5 mt-4 sm:mt-6 sm:px-20 md:px-40 lg:px-60 xl:px-80">
       {/* <h1 className="font-bold text-3xl">Craft Your Perfect Trip</h1> */}
       <h1 className="font-bold text-3xl">Plan Your Next Getaway</h1>
       {/* <h1 className="font-bold text-3xl">Plan Your Dream Getaway</h1> */}
@@ -193,8 +193,8 @@ export default function CreateTrip() {
         Share a few details, and we&apos;ll recommend travel spots and hotels
         for you!
       </p>
-      <div className="mt-4 sm:mt-8">
-        <div className="flex flex-col gap-4">
+      <div className="mt-4 sm:mt-6">
+        <div className="flex flex-col gap-3">
           <LocationInput
             inputPlace={inputPlace}
             setInputPlace={setInputPlace}
@@ -209,7 +209,7 @@ export default function CreateTrip() {
           <PeopleCount tripInfo={tripInfo} updateTripInfo={updateTripInfo} />
           <TripBudget updateTripInfo={updateTripInfo} />
 
-          <div className="flex flex-col items-center gap-2 justify-center">
+          <div className="flex justify-center mt-4">
             <Button
               loading={isSubmitted}
               variant="outlined"

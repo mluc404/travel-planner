@@ -1,11 +1,9 @@
 "use client";
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
-import { Trip, TripPlan0 } from "../types";
-import { LocationPhoto } from "../components/create-trip/LocationPhoto";
+import { Trip } from "../types";
 import { useSession } from "../context/SessionContext";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import TripCard from "../components/view-trip/TripCard";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -50,33 +48,15 @@ export default function AllTrips() {
     fetchData();
   };
 
-  //
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
-  };
-
   const goToTripDetails = (tripId: number) => {
     router.push(`/trips/${tripId}`);
-    // router.push(`/trip-details?saved=${tripId}`);
   };
 
   return (
     <div className="flex justify-center w-full pb-8">
       <div className="p-4 px-6 flex flex-col w-full">
-        <div className="flex gap-4">
-          {/* <div>{session?.user.email}</div> */}
-          {/* {session && (
-            <button className="btn-primary" onClick={() => handleSignOut()}>
-              Sign Out
-            </button>
-          )} */}
-        </div>
-        {/* <div>
-            <Link href="/create-trip">
-              <button className="btn-primary">Create Trip</button>
-            </Link>
-          </div> */}
+        <div className="flex gap-4"></div>
+
         {/* show Loading state */}
         <h1 className="font-semibold text-2xl mb-6">My Trips</h1>
         {session && isLoading && <div> Loading... </div>}
@@ -107,12 +87,6 @@ export default function AllTrips() {
                   handleClick={() => goToTripDetails(trip.id as number)}
                   removeTrip={() => handleDelete(trip.id as number)}
                 />
-                {/* <button
-                  className="btn-primary"
-                  onClick={() => handleDelete(trip.id as number)}
-                >
-                  Delete
-                </button> */}
               </div>
             ))}
         </div>
