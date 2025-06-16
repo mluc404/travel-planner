@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { callAutocomplete } from "../api/places/callAutocomplete";
+import { getPlaceFromText } from "../api/places/FindPlaceFromText";
+import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
 import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js";
 import debounce from "lodash.debounce";
 
-import { TripInfoType } from "../types";
+import { TripInfoType, Trip } from "../types";
 import { LocationInput } from "../components/create-trip/LocationInput";
 import { PeopleCount } from "../components/create-trip/PeopleCount";
 import { TripDuration } from "../components/create-trip/TripDuration";
@@ -14,12 +16,7 @@ import { TripBudget } from "../components/create-trip/TripBudget";
 
 import { API_PROMPT } from "../constants/options";
 import { generateTrip } from "../../lib/AiModal";
-
-import { getPlaceFromText } from "../api/places/FindPlaceFromText";
-import { getPlacePhotoSmall } from "../api/places/getPlacePhotoSmall";
-
 import { tripStorage } from "@/lib/trip-storage";
-import { Trip } from "../types";
 import Button from "@mui/material/Button";
 
 export default function CreateTrip() {
@@ -32,7 +29,6 @@ export default function CreateTrip() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   // States for TripDuration
-  const [dates, setDates] = useState<Date[] | null>(null);
   const [tripDays, setTripDays] = useState<number>(0);
 
   // State to store Trip Info
@@ -59,19 +55,11 @@ export default function CreateTrip() {
     inputPlace.length > 2 && isSelecting && fetchPredictions();
   }, [inputPlace]);
 
-  // Calculate days when dates change
   useEffect(() => {
-    if (dates && dates.length === 2 && dates[1]) {
-      const startDate = new Date(dates[0]);
-      const endDate = new Date(dates[1]);
-      const timeDiff = endDate.getTime() - startDate.getTime();
-      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
-      setTripDays(daysDiff);
-      updateTripInfo("days", daysDiff);
-    } else {
-      updateTripInfo("days", 0);
-    }
-  }, [dates]);
+    console.log("number of days: ", tripDays);
+    setTripDays(tripDays);
+    updateTripInfo("days", tripDays);
+  }, [tripDays]);
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -82,7 +70,7 @@ export default function CreateTrip() {
       if (tripInfo.days > 5) {
         alert("Please select trip duration 5 days or less");
         return;
-      } else if (tripInfo.days === 0) {
+      } else if (tripInfo.days <= 0) {
         alert("Please select an end date");
         return;
       }
@@ -190,7 +178,6 @@ export default function CreateTrip() {
         console.log("Local Stored Trip", localStoredTrip);
 
         // Navigate to the trip page
-        // router.push("/trip-details");
         router.push("/trips/temp");
         setIsLoading(false);
       }
@@ -218,7 +205,7 @@ export default function CreateTrip() {
             updateTripInfo={updateTripInfo}
             setPhotoUrl={setPhotoUrl}
           />
-          <TripDuration dates={dates} setDates={setDates} />
+          <TripDuration setDates={setTripDays} />
           <PeopleCount tripInfo={tripInfo} updateTripInfo={updateTripInfo} />
           <TripBudget updateTripInfo={updateTripInfo} />
 
@@ -242,14 +229,8 @@ export default function CreateTrip() {
               }}
               onClick={handleGenerateTrip}
             >
-              {/* Generate Trip */}
               Launch My Adventure &#x2708;
             </Button>
-            {/* <div>Trips longer than 3 days require extra time</div> */}
-            {/* {isLoading && (
-              // will use animated graphics
-              <div>Loading...</div>
-            )} */}
           </div>
         </div>
       </div>

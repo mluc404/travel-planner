@@ -98,3 +98,26 @@ body {
   background-color: #428cb0;
   border: 1px solid white;
 }
+
+.p-disabled {
+  /* color: rgba(128, 128, 128, 0.6); */
+  color: blue;
+}
+
+/* NEW CALENDAR */
+.react-datepicker {
+  @apply w-full;
+}
+
+.react-datepicker__month-container {
+  @apply w-[100%];
+}
+.react-datepicker__week {
+  @apply flex justify-between text-[1rem] px-2 sm:px-20;
+}
+.react-datepicker__day-names {
+  @apply flex justify-between text-[1rem] px-4 sm:px-20;
+}
+.react-datepicker__header .react-datepicker__current-month {
+  @apply text-[1rem];
+}

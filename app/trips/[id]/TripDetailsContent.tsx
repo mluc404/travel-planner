@@ -127,7 +127,7 @@ export default function TripDetailsContent({ tripId }: { tripId: string }) {
 
           {/* Display Hotels */}
           {trip && (
-            <div className="w-full sm:w-[80%]">
+            <div className="w-full sm:w-[90%] lg:w-[80%]">
               <RecommendHotels trip={trip} />
             </div>
           )}
