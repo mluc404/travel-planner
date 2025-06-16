@@ -1,16 +1,13 @@
-# Roamio Travel Planner &#x2708;
+# Roamio Travel Planner
 
 A modern web application for planning and managing your travel plans. Built with React, Next.js, TypeScript, and Supabase.
 
-  <img src="./public/ss7.png" alt="App mockup on 2 devices"  style="border-radius: 15px" width="700"/>
-  <br></br>
+  <img src="./public/ss1b.png" alt="App mockup on 2 devices"  style="border-radius: 15px" width="700"/>
 
-  <img src="./public/ss1.png" alt="App mockup on iphone" style="border-radius: 15px" width="700"/>
-  <br></br>
+  <img src="./public/ss2b.png" alt="App mockup on iphone" style="border-radius: 15px" width="700"/>
 
-  <img src="./public/ss9.png" alt="App mockup on ipad" style="border-radius: 15px" width="700"/>
+  <img src="./public/ss3b.png" alt="App mockup on ipad" style="border-radius: 15px" width="700"/>
 
-<br></br>
 [<u><font size="3">Live Link &#x2708;</font></u>](https://roamio-travel-planner.vercel.app/)
 
 ## Tech Stack
