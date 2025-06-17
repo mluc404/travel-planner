@@ -51,8 +51,8 @@ export default function CreateTrip() {
     const fetchPredictions = debounce(async () => {
       const preds = await callAutocomplete(inputPlace);
       setPredictions(preds ?? []);
-    }, 300);
-    inputPlace.length > 2 && isSelecting && fetchPredictions();
+    }, 100);
+    inputPlace.length >= 2 && isSelecting && fetchPredictions();
   }, [inputPlace]);
 
   useEffect(() => {
