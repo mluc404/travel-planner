@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -11,9 +11,8 @@ interface TripDurationProps {
 export function TripDuration({ setDates }: TripDurationProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
   const [datesDisplay, setDatesDisplay] = useState<string>("");
-
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const onChange = (e: any[]) => {
     const [start, end] = e;
@@ -41,6 +40,8 @@ export function TripDuration({ setDates }: TripDurationProps) {
         day: "numeric",
       });
       setDatesDisplay(startString + " - " + endString);
+      // Auto close the calendar after selecting both dates
+      setIsCalendarOpen(false);
     }
   };
 
@@ -75,6 +76,7 @@ export function TripDuration({ setDates }: TripDurationProps) {
             <DatePicker
               onChange={(e) => {
                 onChange(e);
+                console.log(e);
               }}
               startDate={startDate}
               endDate={endDate}
